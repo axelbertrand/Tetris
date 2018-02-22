@@ -10,7 +10,7 @@ namespace Textures
 {
 	enum ID
 	{
-		TitleScreen,
+		BackGround,
 	};
 }
 

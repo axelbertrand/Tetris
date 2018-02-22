@@ -27,6 +27,8 @@ class Application
 		FontHolder mFonts;
 		StateStack mStateStack;
 
+		sf::Sprite mBackground;
+
 		sf::Text mFpsText;
 		sf::Time mFpsUpdateTime;
 		int mFpsNumFrames;

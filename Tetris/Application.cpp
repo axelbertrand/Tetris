@@ -14,6 +14,7 @@ mWindow(sf::VideoMode(800u, 600u), "Tetris"),
 mTextures(),
 mFonts(),
 mStateStack(State::Context(mWindow, mTextures, mFonts)),
+mBackground(),
 mFpsText(),
 mFpsUpdateTime(),
 mFpsNumFrames(0)
@@ -23,10 +24,13 @@ mFpsNumFrames(0)
 	mFonts.load(Fonts::Main, "PressStart2P.ttf");
 	mFonts.load(Fonts::Title, "Games.ttf");
 
+	mTextures.load(Textures::BackGround, "background.png");
+
+	mBackground.setTexture(mTextures.get(Textures::BackGround));
+
 	mFpsText.setFont(mFonts.get(Fonts::Main));
-	mFpsText.setPosition(5.f, 5.f);
 	mFpsText.setCharacterSize(10u);
-	mFpsText.setFillColor(sf::Color::Black);
+	mFpsText.setPosition(5.f, 5.f);
 
 	registerStates();
 	mStateStack.pushState(States::Title);
@@ -84,10 +88,11 @@ void Application::render()
 {
 	mWindow.clear(sf::Color::White);
 
-	mStateStack.draw();
-
 	mWindow.setView(mWindow.getDefaultView());
+	mWindow.draw(mBackground);
 	mWindow.draw(mFpsText);
+
+	mStateStack.draw();
 
 	mWindow.display();
 }
