@@ -20,7 +20,8 @@ mFpsNumFrames(0)
 {
 	mWindow.setKeyRepeatEnabled(false);
 
-	mFonts.load(Fonts::Main, "arial.ttf");
+	mFonts.load(Fonts::Main, "PressStart2P.ttf");
+	mFonts.load(Fonts::Title, "Games.ttf");
 
 	mFpsText.setFont(mFonts.get(Fonts::Main));
 	mFpsText.setPosition(5.f, 5.f);

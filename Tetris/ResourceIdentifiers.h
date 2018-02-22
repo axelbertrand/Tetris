@@ -19,6 +19,7 @@ namespace Fonts
 	enum ID
 	{
 		Main,
+		Title,
 	};
 }
 
