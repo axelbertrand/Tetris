@@ -119,6 +119,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Container.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="LoadingGameState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -130,6 +133,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="Container.h" />
     <ClInclude Include="Defs.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="LoadingGameState.h" />

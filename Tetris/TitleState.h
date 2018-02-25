@@ -1,6 +1,7 @@
 #pragma once
 
 #include "State.h"
+#include "Container.h"
 
 class TitleState : public State
 {
@@ -13,9 +14,6 @@ class TitleState : public State
 
 	private :
 		sf::Text mTetrisTitle;
-		sf::Text mNewGameButton;
-		sf::Text mLoadGameButton;
-		sf::Text mSettingsButton;
-		sf::Text mQuitButton;
+		gui::Container mContainer;
 };
 

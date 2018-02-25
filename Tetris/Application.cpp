@@ -25,6 +25,9 @@ mFpsNumFrames(0)
 	mFonts.load(Fonts::Title, "Games.ttf");
 
 	mTextures.load(Textures::BackGround, "background.png");
+	mTextures.load(Textures::ButtonNormal, "ButtonNormal.png");
+	mTextures.load(Textures::ButtonSelected, "ButtonSelected.png");
+	mTextures.load(Textures::ButtonPressed, "ButtonPressed.png");
 
 	mBackground.setTexture(mTextures.get(Textures::BackGround));
 
@@ -102,7 +105,7 @@ void Application::registerStates()
 	mStateStack.registerState<TitleState>(States::Title);
 	mStateStack.registerState<GameState>(States::Game);
 	mStateStack.registerState<MenuState>(States::Menu);
-	mStateStack.registerState<SettingState>(States::Setting);
+	mStateStack.registerState<SettingState>(States::Settings);
 	mStateStack.registerState<LoadingGameState>(States::LoadingGame);
 }
 

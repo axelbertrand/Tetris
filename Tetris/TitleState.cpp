@@ -1,14 +1,12 @@
 #include "TitleState.h"
 
 #include "ResourceHolder.h"
+#include "Button.h"
 
 TitleState::TitleState(StateStack& stack, Context context) :
 State(stack, context),
 mTetrisTitle(),
-mNewGameButton(),
-mLoadGameButton(),
-mSettingsButton(),
-mQuitButton()
+mContainer()
 {
 	sf::Vector2u windowSize = context.window->getSize();
 
@@ -18,29 +16,43 @@ mQuitButton()
 	mTetrisTitle.setPosition((windowSize.x - mTetrisTitle.getLocalBounds().width) / 2, 10);
 	mTetrisTitle.setFillColor(sf::Color::Black);
 
-	mNewGameButton.setFont(context.fonts->get(Fonts::Main));
-	mNewGameButton.setString("Nouvelle partie");
-	mNewGameButton.setCharacterSize(20u);
-	mNewGameButton.setPosition((windowSize.x - mNewGameButton.getLocalBounds().width) / 2, 200);
-	mNewGameButton.setFillColor(sf::Color::Black);
+	auto newGameButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	newGameButton->setPosition(300, 200);
+	newGameButton->setText("Nouvelle partie");
+	newGameButton->setCallback([this]()
+	{
+		requestStackPop();
+		requestStackPush(States::Game);
+	});
 
-	mLoadGameButton.setFont(context.fonts->get(Fonts::Main));
-	mLoadGameButton.setString("Charger partie");
-	mLoadGameButton.setCharacterSize(20u);
-	mLoadGameButton.setPosition((windowSize.x - mLoadGameButton.getLocalBounds().width) / 2, 300);
-	mLoadGameButton.setFillColor(sf::Color::Black);
+	auto loadGameButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	loadGameButton->setPosition(300, 300);
+	loadGameButton->setText("Charger partie");
+	loadGameButton->setCallback([this]()
+	{
+		requestStackPush(States::Game);
+	});
 
-	mSettingsButton.setFont(context.fonts->get(Fonts::Main));
-	mSettingsButton.setString("Options");
-	mSettingsButton.setCharacterSize(20u);
-	mSettingsButton.setPosition((windowSize.x - mSettingsButton.getLocalBounds().width) / 2, 400);
-	mSettingsButton.setFillColor(sf::Color::Black);
+	auto settingsButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	settingsButton->setPosition(300, 400);
+	settingsButton->setText("Options");
+	settingsButton->setCallback([this]()
+	{
+		requestStackPush(States::Settings);
+	});
 
-	mQuitButton.setFont(context.fonts->get(Fonts::Main));
-	mQuitButton.setString("Quitter");
-	mQuitButton.setCharacterSize(20u);
-	mQuitButton.setPosition((windowSize.x - mQuitButton.getLocalBounds().width) / 2, 500);
-	mQuitButton.setFillColor(sf::Color::Black);
+	auto quitButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	quitButton->setPosition(300, 500);
+	quitButton->setText("Quitter");
+	quitButton->setCallback([this]()
+	{
+		requestStackPop();
+	});
+
+	mContainer.pack(newGameButton);
+	mContainer.pack(loadGameButton);
+	mContainer.pack(settingsButton);
+	mContainer.pack(quitButton);
 }
 
 void TitleState::draw()
@@ -48,18 +60,16 @@ void TitleState::draw()
 	sf::RenderWindow& window = *getContext().window;
 
 	window.draw(mTetrisTitle);
-	window.draw(mNewGameButton);
-	window.draw(mLoadGameButton);
-	window.draw(mSettingsButton);
-	window.draw(mQuitButton);
+	window.draw(mContainer);
 }
 
 bool TitleState::update(sf::Time dt)
 {
-	return false;
+	return true;
 }
 
 bool TitleState::handleEvent(const sf::Event & event)
 {
+	mContainer.handleEvent(event);
 	return false;
 }
