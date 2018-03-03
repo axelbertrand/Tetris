@@ -5,7 +5,6 @@
 #include "MenuState.h"
 #include "SettingState.h"
 #include "LoadingGameState.h"
-#include <sstream>
 
 const sf::Time Application::TIME_PER_FRAME = sf::seconds(1.f / 60.f);
 
@@ -115,9 +114,7 @@ void Application::updateFps(sf::Time dt)
 	mFpsNumFrames += 1;
 	if (mFpsUpdateTime >= sf::seconds(1.0f))
 	{
-		std::stringstream stream;
-		stream << mFpsNumFrames;
-		mFpsText.setString(stream.str() + " FPS");
+		mFpsText.setString(std::to_string(mFpsNumFrames) + " FPS");
 
 		mFpsUpdateTime -= sf::seconds(1.0f);
 		mFpsNumFrames = 0;

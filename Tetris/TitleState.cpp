@@ -30,7 +30,7 @@ mContainer()
 	loadGameButton->setText("Charger partie");
 	loadGameButton->setCallback([this]()
 	{
-		requestStackPush(States::Game);
+		requestStackPush(States::LoadingGame);
 	});
 
 	auto settingsButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);

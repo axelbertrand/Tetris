@@ -126,10 +126,14 @@
     <ClCompile Include="LoadingGameState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="SettingState.cpp" />
+    <ClCompile Include="SpriteNode.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateStack.cpp" />
+    <ClCompile Include="TextNode.cpp" />
     <ClCompile Include="TitleState.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -142,11 +146,15 @@
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="ResourceHolder.h" />
     <ClInclude Include="ResourceIdentifiers.h" />
+    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="SettingState.h" />
+    <ClInclude Include="SpriteNode.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateIdentifiers.h" />
     <ClInclude Include="StateStack.h" />
+    <ClInclude Include="TextNode.h" />
     <ClInclude Include="TitleState.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ResourceHolder.inl" />

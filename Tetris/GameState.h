@@ -1,6 +1,7 @@
 #pragma once
 
 #include "State.h"
+#include "World.h"
 
 class GameState : public State
 {
@@ -10,5 +11,8 @@ class GameState : public State
 		virtual void draw();
 		virtual bool update(sf::Time dt);
 		virtual bool handleEvent(const sf::Event& event);
+
+	private :
+		World mWorld;
 };
 
