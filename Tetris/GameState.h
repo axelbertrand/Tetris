@@ -2,6 +2,7 @@
 
 #include "State.h"
 #include "World.h"
+#include "Player.h"
 
 class GameState : public State
 {
@@ -14,5 +15,6 @@ class GameState : public State
 
 	private :
 		World mWorld;
+		Player mPlayer;
 };
 

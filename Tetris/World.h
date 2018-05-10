@@ -4,9 +4,10 @@
 #include "ResourceHolder.h"
 #include "ResourceIdentifiers.h"
 #include "SceneNode.h"
+#include "TextNode.h"
+#include "Grid.h"
 
-#include <array>
-#include <queue>
+#include "TetrominoFactory.h"
 
 class World : private sf::NonCopyable
 {
@@ -19,6 +20,7 @@ class World : private sf::NonCopyable
 	private:
 		void loadTextures();
 		void buildScene();
+		void createTetromino();
 
 		sf::RenderWindow& mWindow;
 		TextureHolder& mTextures;
@@ -29,4 +31,11 @@ class World : private sf::NonCopyable
 		int mScore;
 		int mLevel;
 		int mLinesNumber;
+
+		TextNode* mScoreDisplay;
+		TextNode* mLevelDisplay;
+		TextNode* mLinesNumberDisplay;
+		Grid* mTetrisGrid;
+
+		TetrominoFactory mTetrominoFactory;
 };

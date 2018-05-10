@@ -1,7 +1,6 @@
 #include "World.h"
 
 #include "SpriteNode.h"
-#include "TextNode.h"
 
 #include <algorithm>
 #include <cmath>
@@ -22,6 +21,15 @@ mLinesNumber(0)
 
 void World::update(sf::Time dt)
 {
+	mScoreDisplay->setString(std::to_string(mScore));
+	mLevelDisplay->setString(std::to_string(mLevel));
+	mLinesNumberDisplay->setString(std::to_string(mLinesNumber));
+
+	if (mTetrisGrid->needNewTetromino())
+	{
+		createTetromino();
+	}
+
 	mSceneGraph.update(dt);
 }
 
@@ -37,42 +45,63 @@ void World::loadTextures()
 
 void World::buildScene()
 {
-	std::unique_ptr<TextNode> tetrisText(new TextNode("TETRIS", mFonts));
+	std::unique_ptr<TextNode> tetrisText = std::make_unique<TextNode>("TETRIS", mFonts);
 	tetrisText->setPosition(static_cast<float>(mWindow.getSize().x / 2), 50);
+
+	std::unique_ptr<Grid> tetrisGrid = std::make_unique<Grid>();
+	tetrisGrid->setPosition(0, 275);
+	mTetrisGrid = tetrisGrid.get();
+
+	tetrisText->attachChild(std::move(tetrisGrid));
 	mSceneGraph.attachChild(std::move(tetrisText));
 
-	std::unique_ptr<TextNode> holdPieceText(new TextNode("Conservée", mFonts));
+	std::unique_ptr<TextNode> holdPieceText = std::make_unique<TextNode>("Conservée", mFonts);
 	holdPieceText->setPosition(100, 100);
 	mSceneGraph.attachChild(std::move(holdPieceText));
 
-	std::unique_ptr<TextNode> nextPieceText(new TextNode("Suivante", mFonts));
+	std::unique_ptr<TextNode> nextPieceText = std::make_unique<TextNode>("Suivante", mFonts);
 	nextPieceText->setPosition(static_cast<float>(mWindow.getSize().x - 100), 100);
 	mSceneGraph.attachChild(std::move(nextPieceText));
 
 
-	std::unique_ptr<TextNode> scoreTitleText(new TextNode("Score", mFonts));
+	std::unique_ptr<TextNode> scoreTitleText = std::make_unique<TextNode>("Score", mFonts);
 	scoreTitleText->setPosition(100, 300);
 
-	std::unique_ptr<TextNode> scoreText(new TextNode(std::to_string(mScore), mFonts));
+	std::unique_ptr<TextNode> scoreText = std::make_unique<TextNode>(std::to_string(mScore), mFonts);
 	scoreText->setPosition(0, 50);
-	scoreTitleText.get()->attachChild(std::move(scoreText));
+	mScoreDisplay = scoreText.get();
+
+	scoreTitleText->attachChild(std::move(scoreText));
 	mSceneGraph.attachChild(std::move(scoreTitleText));
 
 
-	std::unique_ptr<TextNode> levelTitleText(new TextNode("Niveau", mFonts));
+	std::unique_ptr<TextNode> levelTitleText = std::make_unique<TextNode>("Niveau", mFonts);
 	levelTitleText->setPosition(100, 400);
 
-	std::unique_ptr<TextNode> levelText(new TextNode(std::to_string(mLevel), mFonts));
+	std::unique_ptr<TextNode> levelText = std::make_unique<TextNode>(std::to_string(mLevel), mFonts);
 	levelText->setPosition(0, 50);
-	levelTitleText.get()->attachChild(std::move(levelText));
+	mLevelDisplay = levelText.get();
+
+	levelTitleText->attachChild(std::move(levelText));
 	mSceneGraph.attachChild(std::move(levelTitleText));
 
 
-	std::unique_ptr<TextNode> linesNumberTitleText(new TextNode("Lignes", mFonts));
+	std::unique_ptr<TextNode> linesNumberTitleText = std::make_unique<TextNode>("Lignes", mFonts);
 	linesNumberTitleText->setPosition(100, 500);
 
-	std::unique_ptr<TextNode> linesNumberText(new TextNode(std::to_string(mLinesNumber), mFonts));
+	std::unique_ptr<TextNode> linesNumberText = std::make_unique<TextNode>(std::to_string(mLinesNumber), mFonts);
 	linesNumberText->setPosition(0, 50);
-	linesNumberTitleText.get()->attachChild(std::move(linesNumberText));
+	mLinesNumberDisplay = linesNumberText.get();
+
+	linesNumberTitleText->attachChild(std::move(linesNumberText));
 	mSceneGraph.attachChild(std::move(linesNumberTitleText));
+
+
+	createTetromino();
+}
+
+void World::createTetromino()
+{
+	Tetromino::Ptr t(mTetrominoFactory.createTetromino(Tetromino::getRandomType()));
+	mTetrisGrid->add(t);
 }
