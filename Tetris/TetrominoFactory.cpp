@@ -6,43 +6,39 @@ Tetromino* TetrominoFactory::createTetromino(Tetromino::Type type)
 	{
 		case Tetromino::Type::I :
 				return new Tetromino({
-					true, true, true, true
-				}, 4, 1, sf::Color::Cyan);
+					sf::Vector2f(0.f, 0.f), sf::Vector2f(4.f, 0.f), sf::Vector2f(4.f, 1.f), sf::Vector2f(0.f, 1.f)
+				},  sf::Color::Cyan);
 
 		case Tetromino::Type::J :
 				return new Tetromino({
-					true, true, true,
-					false, false, true
-				}, 3, 2, sf::Color::Blue);
+					sf::Vector2f(3.f, 0.f), sf::Vector2f(3.f, 2.f), sf::Vector2f(2.f, 2.f), sf::Vector2f(2.f, 1.f), sf::Vector2f(0.f, 1.f), sf::Vector2f(0.f, 0.f)
+				}, sf::Color::Blue);
 
 		case Tetromino::Type::L :
 				return new Tetromino({
-					true, true, true,
-					true, false, false
-				}, 3, 2, sf::Color(255, 153, 0)); // Orange
+					sf::Vector2f(0.f, 0.f), sf::Vector2f(3.f, 0.f), sf::Vector2f(3.f, 1.f), sf::Vector2f(1.f, 1.f), sf::Vector2f(1.f, 2.f), sf::Vector2f(0.f, 2.f)
+				}, sf::Color(255, 153, 0)); // Orange
 
 		case Tetromino::Type::O :
 				return new Tetromino({
-					true, true,
-					true, true
-				}, 2, 2, sf::Color::Yellow);
+					sf::Vector2f(0.f, 0.f), sf::Vector2f(2.f, 0.f), sf::Vector2f(2.f, 2.f), sf::Vector2f(0.f, 2.f)
+				}, sf::Color::Yellow);
 
 		case Tetromino::Type::S :
 			return new Tetromino({
-				false, true, true,
-				true, true, false
-			}, 3, 2, sf::Color::Green);
+				sf::Vector2f(1.f, 1.f), sf::Vector2f(1.f, 0.f), sf::Vector2f(3.f, 0.f), sf::Vector2f(3.f, 1.f), sf::Vector2f(2.f, 1.f), sf::Vector2f(2.f, 2.f), sf::Vector2f(0.f, 2.f), sf::Vector2f(0.f, 1.f)
+			}, sf::Color::Green);
 
 		case Tetromino::Type::T :
 			return new Tetromino({
-				true, true, true,
-				false, true, false
-			}, 3, 2, sf::Color(204, 102, 255)); // Purple
+				sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 1.f), sf::Vector2f(0.f, 0.f), sf::Vector2f(3.f, 0.f), sf::Vector2f(3.f, 1.f), sf::Vector2f(2.f, 1.f), sf::Vector2f(2.f, 2.f), sf::Vector2f(1.f, 2.f)
+			}, sf::Color(204, 102, 255)); // Purple
 
 		case Tetromino::Type::Z :
 			return new Tetromino({
-				true, true, false,
-				false, true, true
-			}, 3, 2, sf::Color::Red);
+				sf::Vector2f(2.f, 1.f), sf::Vector2f(3.f, 1.f), sf::Vector2f(3.f, 2.f), sf::Vector2f(1.f, 2.f), sf::Vector2f(1.f, 1.f), sf::Vector2f(0.f, 1.f), sf::Vector2f(0.f, 0.f), sf::Vector2f(2.f, 0.f)
+			}, sf::Color::Red);
 	}
+
+	return nullptr;
 }

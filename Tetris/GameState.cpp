@@ -16,10 +16,16 @@ bool GameState::update(sf::Time dt)
 {
 	mWorld.update(dt);
 
+	std::queue<Command>& commands = mWorld.getCommandQueue();
+	mPlayer.handleRealtimeInput(commands);
+
 	return true;
 }
 
 bool GameState::handleEvent(const sf::Event & event)
 {
-	return false;
+	std::queue<Command>& commands = mWorld.getCommandQueue();
+	mPlayer.handleEvent(event, commands);
+
+	return true;
 }

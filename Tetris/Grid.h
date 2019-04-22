@@ -10,16 +10,18 @@ class Grid : public SceneNode
 		virtual ~Grid();
 
 		void setSquareScale(float scale);
-		void add(Tetromino::Ptr tetromino);
+		void addTetromino(Tetromino::Ptr tetromino);
 		bool needNewTetromino() const;
+		virtual sf::FloatRect getBoundingRect() const;
+		Tetromino* getCurrentTetromino() const;
 
 	private :
 		virtual void updateCurrent(sf::Time dt);
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
+		void adaptTetrominoPosition();
 
 		sf::RectangleShape mGridRect;
-		std::vector<Tetromino::Ptr> mTetrominos;
-		int mCurrentTetromino;
+		Tetromino* mCurrentTetromino;
 
 		int mElapsedTime;
 		bool mNeedNewTetromino;

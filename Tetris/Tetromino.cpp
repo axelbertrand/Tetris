@@ -3,25 +3,15 @@
 #include <random>
 #include <chrono>
 
-Tetromino::Tetromino(std::vector<bool> shapeArray, int width, int height, sf::Color color) :
-mVertexArray(sf::Quads),
-mWidth(width),
-mHeight(height),
-mColor(color)
+Tetromino::Tetromino(std::vector<sf::Vector2f> shapePoints, sf::Color color) :
+mVertexArray(sf::PrimitiveType::TriangleFan),
+mIsPlaced(false)
 {
-	for (int i = 0; i < height; ++i)
-	{
-		for (int j = 0; j < width; ++j)
-		{
-			if (shapeArray[i*width + j])
-			{
-				mVertexArray.append(sf::Vertex(sf::Vector2f(0.f + j, 0.f + i), color));
-				mVertexArray.append(sf::Vertex(sf::Vector2f(0.f + j, 1.f + i), color));
-				mVertexArray.append(sf::Vertex(sf::Vector2f(1.f + j, 1.f + i), color));
-				mVertexArray.append(sf::Vertex(sf::Vector2f(1.f + j, 0.f + i), color));
-			}
-		}
-	}
+	for(sf::Vector2f point : shapePoints)
+		mVertexArray.append(sf::Vertex(point, color));
+
+	sf::FloatRect bounds = mVertexArray.getBounds();
+	setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 }
 
 Tetromino::~Tetromino()
@@ -62,19 +52,22 @@ Tetromino::Type Tetromino::getRandomType()
 	return tetrominoType;
 }
 
-sf::FloatRect Tetromino::getLocalBounds() const
+sf::FloatRect Tetromino::getBoundingRect() const
 {
-	return sf::FloatRect(0.f, 0.f, mWidth, mHeight);
+	return getWorldTransform().transformRect(mVertexArray.getBounds());
 }
 
-sf::FloatRect Tetromino::getGlobalBounds() const
+Category Tetromino::getCategory() const
 {
-	return sf::FloatRect(getPosition().x, getPosition().y, mWidth * getScale().x, mHeight * getScale().y);
+	return mIsPlaced ? Category::PlacedTetromino : Category::CurrentTetromino;
 }
 
-void Tetromino::draw(sf::RenderTarget & target, sf::RenderStates states) const
+void Tetromino::setPlaced(bool placed)
 {
-	states.transform *= getTransform();
+	mIsPlaced = placed;
+}
 
+void Tetromino::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
+{
 	target.draw(mVertexArray, states);
 }

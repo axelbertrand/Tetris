@@ -30,6 +30,14 @@ void World::update(sf::Time dt)
 		createTetromino();
 	}
 
+	while (!mCommandQueue.empty())
+	{
+		mSceneGraph.onCommand(mCommandQueue.back(), dt);
+		mCommandQueue.pop();
+	}
+
+	adaptTetrominoPosition();
+
 	mSceneGraph.update(dt);
 }
 
@@ -38,9 +46,33 @@ void World::draw()
 	mWindow.draw(mSceneGraph);
 }
 
+std::queue<Command>& World::getCommandQueue()
+{
+	return mCommandQueue;
+}
+
 void World::loadTextures()
 {
 
+}
+
+void World::adaptTetrominoPosition()
+{
+	sf::FloatRect gridBounds = getGridBounds();
+
+	Tetromino* currentTetromino = mTetrisGrid->getCurrentTetromino();
+	sf::Vector2f position = currentTetromino->getPosition();
+	sf::FloatRect tetrominoBounds = currentTetromino->getBoundingRect();
+	sf::Vector2f origin = currentTetromino->getOrigin();
+	sf::Vector2f scale = currentTetromino->getScale();
+
+
+
+	position.x = std::max(position.x, gridBounds.left + std::floor(tetrominoBounds.width / 2.f));
+	position.x = std::min(position.x, gridBounds.left + gridBounds.width - std::floor(tetrominoBounds.width / 2.f));
+	position.y = std::max(position.y, gridBounds.top + tetrominoBounds.height / 2.f); // + (origin.y + static_cast<int>(currentTetromino->getRotation()) / 180) * scale.y
+	position.y = std::min(position.y, gridBounds.top + gridBounds.height + tetrominoBounds.height / 2.f); // + (origin.y + static_cast<int>(currentTetromino->getRotation()) / 180) * scale.y - tetrominoBounds.height
+	currentTetromino->setPosition(position);
 }
 
 void World::buildScene()
@@ -49,7 +81,7 @@ void World::buildScene()
 	tetrisText->setPosition(static_cast<float>(mWindow.getSize().x / 2), 50);
 
 	std::unique_ptr<Grid> tetrisGrid = std::make_unique<Grid>();
-	tetrisGrid->setPosition(0, 275);
+	tetrisGrid->setPosition(0, 50);
 	mTetrisGrid = tetrisGrid.get();
 
 	tetrisText->attachChild(std::move(tetrisGrid));
@@ -103,5 +135,11 @@ void World::buildScene()
 void World::createTetromino()
 {
 	Tetromino::Ptr t(mTetrominoFactory.createTetromino(Tetromino::getRandomType()));
-	mTetrisGrid->add(t);
+	mTetrisGrid->addTetromino(std::move(t));
+}
+
+sf::FloatRect World::getGridBounds() const
+{
+	sf::FloatRect gridBounds = mTetrisGrid->getBoundingRect();
+	return sf::FloatRect(gridBounds.left - mTetrisGrid->getWorldPosition().x, gridBounds.top - mTetrisGrid->getWorldPosition().y, gridBounds.width, gridBounds.height);
 }

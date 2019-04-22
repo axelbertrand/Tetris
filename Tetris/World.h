@@ -6,6 +6,8 @@
 #include "SceneNode.h"
 #include "TextNode.h"
 #include "Grid.h"
+#include "Command.h"
+#include <queue>
 
 #include "TetrominoFactory.h"
 
@@ -16,17 +18,21 @@ class World : private sf::NonCopyable
 		void update(sf::Time dt);
 		void draw();
 
+		std::queue<Command>& getCommandQueue();
 
 	private:
 		void loadTextures();
+		void adaptTetrominoPosition();
 		void buildScene();
 		void createTetromino();
+		sf::FloatRect getGridBounds() const;
 
 		sf::RenderWindow& mWindow;
 		TextureHolder& mTextures;
 		FontHolder& mFonts;
 
 		SceneNode mSceneGraph;
+		std::queue<Command> mCommandQueue;
 
 		int mScore;
 		int mLevel;
