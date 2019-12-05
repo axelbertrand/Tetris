@@ -2,33 +2,29 @@
 
 #include "Defs.h"
 #include "SceneNode.h"
-#include <memory>
+#include <bitset>
 
-class Tetromino : public SceneNode
+class Tetromino
 {
-	public :
-		typedef std::unique_ptr<Tetromino> Ptr;
-
+	public:
 		enum class Type
 		{
 			I, J, L, O, S, T, Z
 		};
 
-		static Type getRandomType();
-
-		Tetromino(std::vector<sf::Vector2f> shapePoints, sf::Color color);
+		Tetromino(uint16_t shape, sf::Color color);
+		Tetromino(const Tetromino& other) = delete;
 		virtual ~Tetromino();
 
-		virtual sf::FloatRect getBoundingRect() const;
+		std::bitset<16> getShape() const;
+		sf::Color getColor() const;
+		unsigned int getValue() const;
 
-		virtual Category getCategory() const;
+	private:
+		std::bitset<16> mShape;
+		sf::Color mColor;
+		unsigned int mValue;
 
-		void setPlaced(bool placed);
-
-	private :
-		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
-
-		sf::VertexArray mVertexArray;
-		bool mIsPlaced;
+		static unsigned int sMaxValue;
 };
 

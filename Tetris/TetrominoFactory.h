@@ -4,7 +4,10 @@
 
 class TetrominoFactory
 {
-	public :
-		Tetromino* createTetromino(Tetromino::Type type);
+	public:
+		Tetromino createTetromino(Tetromino::Type type);
+
+	private:
+		Tetromino::Type getRandomTetrominoType();
 };
 

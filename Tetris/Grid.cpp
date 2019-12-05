@@ -1,11 +1,8 @@
 #include "Grid.h"
 #include "TetrominoFactory.h"
 
-Grid::Grid() :
-mGridRect(sf::Vector2f(10.f, 22.f)),
-mCurrentTetromino(nullptr),
-mElapsedTime(0),
-mNeedNewTetromino(true)
+Grid::Grid()
+	: mGridRect(sf::Vector2f(GRID_SIZE.x, GRID_SIZE.y))
 {
 	mGridRect.scale(20.f, 20.f);
 	mGridRect.setFillColor(sf::Color(128, 212, 255, 100));
@@ -17,57 +14,37 @@ Grid::~Grid()
 {
 }
 
-void Grid::setSquareScale(float scale)
+bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 {
-	mGridRect.setScale(10.f * scale, 22.f * scale);
-}
+	sf::Vector2i startingPosition(5, 0);
+	if (checkCollision(tetromino.get(), startingPosition))
+	{
+		return false;
+	}
 
-void Grid::addTetromino(Tetromino::Ptr tetromino)
-{
-	tetromino->setScale(mGridRect.getScale());
+	mTetrominos.push_back(std::move(tetromino));
+	mTetrominosPosition.push_back(startingPosition);
 
-	mCurrentTetromino = tetromino.get();
-	attachChild(std::move(tetromino));
+	std::bitset<16> tetrominoShape = tetromino->getShape();
+	for (std::size_t i = 0; i < 4; ++i)
+	{
+		for (std::size_t j = 0; j < 4; ++j)
+		{
+			if (tetrominoShape.test(i * 4 + j))
+			{
+				Tile& tile = mTiles.at((startingPosition.x + i) * 4 + (startingPosition.y + j));
+				tile.color = tetromino->getColor();
+				tile.value = tetromino->getValue();
+			}
+		}
+	}
 
-	mNeedNewTetromino = false;
-}
-
-bool Grid::needNewTetromino() const
-{
-	return mNeedNewTetromino;
-}
-
-sf::FloatRect Grid::getBoundingRect() const
-{
-	//return mGridRect.getGlobalBounds();
-	return getWorldTransform().transformRect(mGridRect.getGlobalBounds());
-}
-
-Tetromino* Grid::getCurrentTetromino() const
-{
-	return mCurrentTetromino;
+	return true;
 }
 
 void Grid::updateCurrent(sf::Time dt)
 {
-	//adaptTetrominoPosition();
 
-	mElapsedTime += dt.asMilliseconds();
-
-	if (mElapsedTime >= 1000)
-	{
-		if (mCurrentTetromino->getPosition().y + mCurrentTetromino->getBoundingRect().height <= getBoundingRect().height)
-		{
-			mCurrentTetromino->move(0.f, 20.f);
-		}
-		else
-		{
-			mNeedNewTetromino = true;
-			mCurrentTetromino->setPlaced(true);
-		}
-
-		mElapsedTime -= 1000;
-	}
 }
 
 void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
@@ -75,18 +52,25 @@ void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(mGridRect, states);
 }
 
-void Grid::adaptTetrominoPosition()
+bool Grid::checkCollision(Tetromino* tetromino, sf::Vector2i position) const
 {
-	sf::FloatRect gridBounds = mGridRect.getGlobalBounds();
+	std::bitset<16> tetrominoShape = tetromino->getShape();
 
-	sf::Vector2f position = mCurrentTetromino->getPosition();
-	/*sf::FloatRect tetrominoBounds = mCurrentTetromino->getBoundingRect();
-	sf::Vector2f origin = mCurrentTetromino->getOrigin();
-	sf::Vector2f scale = mCurrentTetromino->getScale();*/
+	for (std::size_t i = 0; i < 4; i++) {
+		for (std::size_t j = 0; j < 4; j++) {
+			if (tetrominoShape.test(i * 4 + j)) {
+				if (position.x + i < GRID_SIZE.x && position.y + j < GRID_SIZE.y) {
+					if (mTiles.at((position.x + i) * 4 + (position.y + j)).value != 0) {
+						return true;
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+	}
 
-	position.x = std::max(position.x, gridBounds.left);
-	position.x = std::min(position.x, gridBounds.left + gridBounds.width);
-	position.y = std::max(position.y, gridBounds.top); // + (origin.y + static_cast<int>(currentTetromino->getRotation()) / 180) * scale.y
-	position.y = std::min(position.y, gridBounds.top + gridBounds.height); // + (origin.y + static_cast<int>(currentTetromino->getRotation()) / 180) * scale.y - tetrominoBounds.height
-	mCurrentTetromino->setPosition(position);
+	return false;
 }
