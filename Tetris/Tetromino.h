@@ -16,6 +16,8 @@ class Tetromino
 		Tetromino(const Tetromino& other) = delete;
 		virtual ~Tetromino();
 
+		void rotate(bool clockWise);
+
 		std::bitset<16> getShape() const;
 		sf::Color getColor() const;
 		unsigned int getValue() const;

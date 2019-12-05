@@ -5,7 +5,7 @@
 class TetrominoFactory
 {
 	public:
-		Tetromino createTetromino(Tetromino::Type type);
+		std::unique_ptr<Tetromino> createRandomTetromino();
 
 	private:
 		Tetromino::Type getRandomTetrominoType();

@@ -2,6 +2,7 @@
 
 #include "SpriteNode.h"
 
+#include <memory>
 #include <algorithm>
 #include <cmath>
 
@@ -134,8 +135,7 @@ void World::buildScene()
 
 void World::createTetromino()
 {
-	Tetromino::Ptr t(mTetrominoFactory.createTetromino(Tetromino::getRandomType()));
-	mTetrisGrid->addTetromino(std::move(t));
+	mTetrisGrid->addTetromino(mTetrominoFactory.createRandomTetromino());
 }
 
 sf::FloatRect World::getGridBounds() const
