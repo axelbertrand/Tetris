@@ -40,7 +40,7 @@ class Grid : public SceneNode
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 		bool checkCollision(Tetromino* tetromino, const sf::Vector2i& position) const;
 
-		const sf::Vector2i GRID_SIZE = sf::Vector2i(10, 22);
+		const sf::Vector2u GRID_SIZE = sf::Vector2u(10, 22);
 
 		std::array<Tile, 220> mTiles;
 		std::unordered_map<sf::Vector2i, std::unique_ptr<Tetromino>> mTetrominos;

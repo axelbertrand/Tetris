@@ -20,9 +20,11 @@ void Tetromino::rotate(bool clockWise)
 	std::size_t i, j;
 	if (clockWise)
 	{
-		for (j = 0; j < 4; ++j) {
+		for (j = 0; j < 4; ++j)
+		{
 			nj = 0;
-			for (i = 3; i > -1; --i) {
+			for (i = 3; i > -1; --i)
+			{
 				newShape[ni * 4 + nj] = mShape[i * 4 + j];
 				nj++;
 			}
@@ -31,9 +33,11 @@ void Tetromino::rotate(bool clockWise)
 	}
 	else
 	{
-		for (j = 3; j > -1; --j) {
+		for (j = 3; j > -1; --j)
+		{
 			nj = 0;
-			for (i = 0; i < 4; ++i) {
+			for (i = 0; i < 4; ++i)
+			{
 				newShape[ni * 4 + nj] = mShape[i * 4 + j];
 				nj++;
 			}
