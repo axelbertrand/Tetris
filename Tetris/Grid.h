@@ -32,8 +32,10 @@ class Grid : public SceneNode
 		virtual ~Grid();
 
 		bool addTetromino(std::unique_ptr<Tetromino> tetromino);
-		bool moveTetromino(Tetromino* tetromino, const sf::Vector2i& newPosition);
-		bool rotateTetromino(Tetromino* tetromino, bool clockWise);
+		bool moveCurrentTetromino(const sf::Vector2i& deltaPosition);
+		bool rotateCurrentTetromino(bool clockWise = true);
+
+		Tetromino* getCurrentTetromino() const;
 
 	private :
 		virtual void updateCurrent(sf::Time dt);
@@ -44,6 +46,7 @@ class Grid : public SceneNode
 
 		std::array<Tile, 220> mTiles;
 		std::unordered_map<sf::Vector2i, std::unique_ptr<Tetromino>> mTetrominos;
+		Tetromino* mCurrentTetromino;
 		sf::RectangleShape mGridRect;
 };
 

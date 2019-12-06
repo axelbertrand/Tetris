@@ -1,27 +1,27 @@
 #include "Player.h"
 
-#include "Tetromino.h"
+#include "Grid.h"
 
 struct TetrominoMover
 {
-	TetrominoMover(float vx, float vy) :
+	TetrominoMover(int vx, int vy) :
 	velocity(vx, vy)
 	{
 	}
 
-	void operator() (Tetromino& tetromino, sf::Time dt) const
+	void operator() (Grid& grid, sf::Time dt) const
 	{
-		tetromino.move(velocity);
+		grid.moveCurrentTetromino(velocity);
 	}
 
-	sf::Vector2f velocity;
+	sf::Vector2i velocity;
 };
 
 struct TetrominoRotator
 {
-	void operator() (Tetromino& tetromino, sf::Time dt) const
+	void operator() (Grid& grid, sf::Time dt) const
 	{
-		tetromino.rotate(90.f);
+		grid.rotateCurrentTetromino();
 	}
 };
 
@@ -88,13 +88,13 @@ sf::Keyboard::Key Player::getAssignedKey(Action action) const
 
 void Player::initializeActions()
 {
-	const float playerSpeed = 20.f;
+	const int tetrominoSpeed = 20.f;
 
-	mActionBinding[Action::MoveLeft].action = derivedAction<Tetromino>(TetrominoMover(-playerSpeed, 0.f));
-	mActionBinding[Action::MoveRight].action = derivedAction<Tetromino>(TetrominoMover(+playerSpeed, 0.f));
-	mActionBinding[Action::SoftDrop].action = derivedAction<Tetromino>(TetrominoMover(0.f, +playerSpeed));
-	mActionBinding[Action::HardDrop].action = derivedAction<Tetromino>(TetrominoMover(0.f, -playerSpeed));
-	mActionBinding[Action::Rotate].action = derivedAction<Tetromino>(TetrominoRotator());
+	mActionBinding[Action::MoveLeft].action = derivedAction<Grid>(TetrominoMover(-tetrominoSpeed, 0));
+	mActionBinding[Action::MoveRight].action = derivedAction<Grid>(TetrominoMover(tetrominoSpeed, 0));
+	mActionBinding[Action::SoftDrop].action = derivedAction<Grid>(TetrominoMover(0, tetrominoSpeed));
+	mActionBinding[Action::HardDrop].action = derivedAction<Grid>(TetrominoMover(0, -tetrominoSpeed));
+	mActionBinding[Action::Rotate].action = derivedAction<Grid>(TetrominoRotator());
 }
 
 bool Player::isRealtimeAction(Player::Action action)

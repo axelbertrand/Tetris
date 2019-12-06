@@ -38,16 +38,18 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 		}
 	}
 
+	mCurrentTetromino = tetromino.get();
+
 	return true;
 }
 
-bool Grid::moveTetromino(Tetromino* tetromino, const sf::Vector2i& newPosition)
+bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 {
-	std::bitset<16> tetrominoShape = tetromino->getShape();
+	std::bitset<16> tetrominoShape = mCurrentTetromino->getShape();
 
 	// Search for the current tetromino position
-	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [tetromino](const auto& tetrominoPair) {
-		return tetrominoPair.second.get() == tetromino;
+	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [this](const auto& tetrominoPair) {
+		return tetrominoPair.second.get() == mCurrentTetromino;
 	});
 
 	if (foundIterator == mTetrominos.end())
@@ -55,7 +57,9 @@ bool Grid::moveTetromino(Tetromino* tetromino, const sf::Vector2i& newPosition)
 		return false;
 	}
 
-	sf::Vector2i tetrominoPosition = foundIterator->first;
+	sf::Vector2i currentTetrominoPosition = foundIterator->first;
+
+	sf::Vector2i newPosition(currentTetrominoPosition.x + deltaPosition.x, currentTetrominoPosition.y + deltaPosition.y);
 
 	for (std::size_t i = 0; i < 4; ++i)
 	{
@@ -63,14 +67,14 @@ bool Grid::moveTetromino(Tetromino* tetromino, const sf::Vector2i& newPosition)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& oldTile = mTiles.at((tetrominoPosition.x + i) * 4 + (tetrominoPosition.y + j));
+				Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
 				oldTile.value = 0;
 				oldTile.color = sf::Color::Transparent;
 			}
 		}
 	}
 
-	if (checkCollision(tetromino, newPosition))
+	if (checkCollision(mCurrentTetromino, newPosition))
 	{
 		for (std::size_t i = 0; i < 4; ++i)
 		{
@@ -78,9 +82,9 @@ bool Grid::moveTetromino(Tetromino* tetromino, const sf::Vector2i& newPosition)
 			{
 				if (tetrominoShape.test(i * 4 + j))
 				{
-					Tile& oldTile = mTiles.at((tetrominoPosition.x + i) * 4 + (tetrominoPosition.y + j));
-					oldTile.value = tetromino->getValue();
-					oldTile.color = tetromino->getColor();
+					Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
+					oldTile.value = mCurrentTetromino->getValue();
+					oldTile.color = mCurrentTetromino->getColor();
 				}
 			}
 		}
@@ -95,27 +99,27 @@ bool Grid::moveTetromino(Tetromino* tetromino, const sf::Vector2i& newPosition)
 			if (tetrominoShape.test(i * 4 + j))
 			{
 				Tile& newTile = mTiles.at((newPosition.x + i) * 4 + (newPosition.y + j));
-				newTile.value = tetromino->getValue();
-				newTile.color = tetromino->getColor();
+				newTile.value = mCurrentTetromino->getValue();
+				newTile.color = mCurrentTetromino->getColor();
 			}
 		}
 	}
 
 	// Change the position of the tetromino to its new position
-	auto nodeHandle = mTetrominos.extract(tetrominoPosition);
+	auto nodeHandle = mTetrominos.extract(currentTetrominoPosition);
 	nodeHandle.key() = newPosition;
 	mTetrominos.insert(std::move(nodeHandle));
 
 	return true;
 }
 
-bool Grid::rotateTetromino(Tetromino* tetromino, bool clockWise)
+bool Grid::rotateCurrentTetromino(bool clockWise)
 {
-	std::bitset<16> tetrominoShape = tetromino->getShape();
+	std::bitset<16> tetrominoShape = mCurrentTetromino->getShape();
 
 	// Search for the current tetromino position
-	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [tetromino](const auto& tetrominoPair) {
-		return tetrominoPair.second.get() == tetromino;
+	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [this](const auto& tetrominoPair) {
+		return tetrominoPair.second.get() == mCurrentTetromino;
 	});
 
 	if (foundIterator == mTetrominos.end())
@@ -123,7 +127,7 @@ bool Grid::rotateTetromino(Tetromino* tetromino, bool clockWise)
 		return false;
 	}
 
-	sf::Vector2i tetrominoPosition = foundIterator->first;
+	sf::Vector2i currentTetrominoPosition = foundIterator->first;
 
 	for (std::size_t i = 0; i < 4; ++i)
 	{
@@ -131,16 +135,16 @@ bool Grid::rotateTetromino(Tetromino* tetromino, bool clockWise)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& oldTile = mTiles.at((tetrominoPosition.x + i) * 4 + (tetrominoPosition.y + j));
+				Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
 				oldTile.value = 0;
 				oldTile.color = sf::Color::Transparent;
 			}
 		}
 	}
 
-	tetromino->rotate(clockWise);
+	mCurrentTetromino->rotate(clockWise);
 
-	if (checkCollision(tetromino, tetrominoPosition))
+	if (checkCollision(mCurrentTetromino, currentTetrominoPosition))
 	{
 		for (std::size_t i = 0; i < 4; ++i)
 		{
@@ -148,19 +152,19 @@ bool Grid::rotateTetromino(Tetromino* tetromino, bool clockWise)
 			{
 				if (tetrominoShape.test(i * 4 + j))
 				{
-					Tile& oldTile = mTiles.at((tetrominoPosition.x + i) * 4 + (tetrominoPosition.y + j));
-					oldTile.value = tetromino->getValue();
-					oldTile.color = tetromino->getColor();
+					Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
+					oldTile.value = mCurrentTetromino->getValue();
+					oldTile.color = mCurrentTetromino->getColor();
 				}
 			}
 		}
 
-		tetromino->rotate(!clockWise);
+		mCurrentTetromino->rotate(!clockWise);
 
 		return false;
 	}
 
-	tetrominoShape = tetromino->getShape();
+	tetrominoShape = mCurrentTetromino->getShape();
 
 	for (std::size_t i = 0; i < 4; ++i)
 	{
@@ -168,14 +172,19 @@ bool Grid::rotateTetromino(Tetromino* tetromino, bool clockWise)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& newTile = mTiles.at((tetrominoPosition.x + i) * 4 + (tetrominoPosition.y + j));
-				newTile.value = tetromino->getValue();
-				newTile.color = tetromino->getColor();
+				Tile& newTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
+				newTile.value = mCurrentTetromino->getValue();
+				newTile.color = mCurrentTetromino->getColor();
 			}
 		}
 	}
 
 	return true;
+}
+
+Tetromino* Grid::getCurrentTetromino() const
+{
+	return mCurrentTetromino;
 }
 
 void Grid::updateCurrent(sf::Time dt)
