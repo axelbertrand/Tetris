@@ -8,13 +8,13 @@
 namespace std
 {
 	template <>
-	struct hash<sf::Vector2i>
+	struct hash<sf::Vector2u>
 	{
-		std::size_t operator()(const sf::Vector2i& vector) const
+		std::size_t operator()(const sf::Vector2u& vector) const
 		{
 			// Compute individual hash values for x and y
 			// and combine them using XOR and bit shifting
-			return (std::hash<int>()(vector.x) ^ (hash<int>()(vector.y) << 1));
+			return (std::hash<unsigned int>()(vector.x) ^ (hash<unsigned int>()(vector.y) << 1));
 		}
 	};
 }
@@ -40,12 +40,12 @@ class Grid : public SceneNode
 	private :
 		virtual void updateCurrent(sf::Time dt);
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
-		bool checkCollision(Tetromino* tetromino, const sf::Vector2i& position) const;
+		bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
 
 		const sf::Vector2u GRID_SIZE = sf::Vector2u(10, 22);
 
 		std::array<Tile, 220> mTiles;
-		std::unordered_map<sf::Vector2i, std::unique_ptr<Tetromino>> mTetrominos;
+		std::unordered_map<sf::Vector2u, std::unique_ptr<Tetromino>> mTetrominos;
 		Tetromino* mCurrentTetromino;
 		sf::RectangleShape mGridRect;
 };

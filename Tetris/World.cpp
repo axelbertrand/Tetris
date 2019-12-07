@@ -7,14 +7,15 @@
 #include <cmath>
 
 
-World::World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts) :
-mWindow(window),
-mTextures(textures),
-mFonts(fonts),
-mSceneGraph(),
-mScore(0),
-mLevel(1),
-mLinesNumber(0)
+World::World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
+	: mWindow(window)
+	, mTextures(textures)
+	, mFonts(fonts)
+	, mSceneGraph()
+	, mScore(0)
+	, mLevel(1)
+	, mLinesNumber(0)
+	, mIsGameFinished(false)
 {
 	loadTextures();
 	buildScene();
@@ -26,9 +27,11 @@ void World::update(sf::Time dt)
 	mLevelDisplay->setString(std::to_string(mLevel));
 	mLinesNumberDisplay->setString(std::to_string(mLinesNumber));
 
-	if (mTetrisGrid->needNewTetromino())
+	if (!mTetrisGrid->moveCurrentTetromino(sf::Vector2i(0, 1)))
 	{
-		createTetromino();
+		std::unique_ptr<Tetromino> nextTetromino = mTetrominoFactory.createRandomTetromino();
+		if (!mTetrisGrid->addTetromino(std::move(nextTetromino)))
+			mIsGameFinished = true;
 	}
 
 	while (!mCommandQueue.empty())
@@ -36,8 +39,6 @@ void World::update(sf::Time dt)
 		mSceneGraph.onCommand(mCommandQueue.back(), dt);
 		mCommandQueue.pop();
 	}
-
-	adaptTetrominoPosition();
 
 	mSceneGraph.update(dt);
 }
@@ -55,25 +56,6 @@ std::queue<Command>& World::getCommandQueue()
 void World::loadTextures()
 {
 
-}
-
-void World::adaptTetrominoPosition()
-{
-	sf::FloatRect gridBounds = getGridBounds();
-
-	Tetromino* currentTetromino = mTetrisGrid->getCurrentTetromino();
-	sf::Vector2f position = currentTetromino->getPosition();
-	sf::FloatRect tetrominoBounds = currentTetromino->getBoundingRect();
-	sf::Vector2f origin = currentTetromino->getOrigin();
-	sf::Vector2f scale = currentTetromino->getScale();
-
-
-
-	position.x = std::max(position.x, gridBounds.left + std::floor(tetrominoBounds.width / 2.f));
-	position.x = std::min(position.x, gridBounds.left + gridBounds.width - std::floor(tetrominoBounds.width / 2.f));
-	position.y = std::max(position.y, gridBounds.top + tetrominoBounds.height / 2.f); // + (origin.y + static_cast<int>(currentTetromino->getRotation()) / 180) * scale.y
-	position.y = std::min(position.y, gridBounds.top + gridBounds.height + tetrominoBounds.height / 2.f); // + (origin.y + static_cast<int>(currentTetromino->getRotation()) / 180) * scale.y - tetrominoBounds.height
-	currentTetromino->setPosition(position);
 }
 
 void World::buildScene()

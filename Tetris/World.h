@@ -22,7 +22,6 @@ class World : private sf::NonCopyable
 
 	private:
 		void loadTextures();
-		void adaptTetrominoPosition();
 		void buildScene();
 		void createTetromino();
 		sf::FloatRect getGridBounds() const;
@@ -37,6 +36,7 @@ class World : private sf::NonCopyable
 		int mScore;
 		int mLevel;
 		int mLinesNumber;
+		bool mIsGameFinished;
 
 		TextNode* mScoreDisplay;
 		TextNode* mLevelDisplay;

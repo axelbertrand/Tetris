@@ -16,13 +16,11 @@ Grid::~Grid()
 
 bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 {
-	sf::Vector2i startingPosition(5, 0);
+	sf::Vector2u startingPosition(5, 0);
 	if (checkCollision(tetromino.get(), startingPosition))
 	{
 		return false;
 	}
-
-	mTetrominos.insert(std::make_pair(startingPosition, std::move(tetromino)));
 
 	std::bitset<16> tetrominoShape = tetromino->getShape();
 	for (std::size_t i = 0; i < 4; ++i)
@@ -39,6 +37,7 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 	}
 
 	mCurrentTetromino = tetromino.get();
+	mTetrominos.insert(std::make_pair(startingPosition, std::move(tetromino)));
 
 	return true;
 }
@@ -57,9 +56,9 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 		return false;
 	}
 
-	sf::Vector2i currentTetrominoPosition = foundIterator->first;
+	sf::Vector2u currentTetrominoPosition = foundIterator->first;
 
-	sf::Vector2i newPosition(currentTetrominoPosition.x + deltaPosition.x, currentTetrominoPosition.y + deltaPosition.y);
+	sf::Vector2u newPosition(currentTetrominoPosition.x + deltaPosition.x, currentTetrominoPosition.y + deltaPosition.y);
 
 	for (std::size_t i = 0; i < 4; ++i)
 	{
@@ -127,7 +126,7 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 		return false;
 	}
 
-	sf::Vector2i currentTetrominoPosition = foundIterator->first;
+	sf::Vector2u currentTetrominoPosition = foundIterator->first;
 
 	for (std::size_t i = 0; i < 4; ++i)
 	{
@@ -197,7 +196,7 @@ void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(mGridRect, states);
 }
 
-bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2i& position) const
+bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const
 {
 	std::bitset<16> tetrominoShape = tetromino->getShape();
 
