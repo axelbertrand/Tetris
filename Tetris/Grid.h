@@ -24,8 +24,8 @@ class Grid : public SceneNode
 	public :
 		struct Tile
 		{
-			sf::Color color;
-			int value;
+			sf::Color color = sf::Color::Transparent;
+			unsigned int value = 0;
 		};
 
 		Grid();
@@ -35,18 +35,21 @@ class Grid : public SceneNode
 		bool moveCurrentTetromino(const sf::Vector2i& deltaPosition);
 		bool rotateCurrentTetromino(bool clockWise = true);
 
-		Tetromino* getCurrentTetromino() const;
+		bool needNewTetromino() const;
 
 	private :
 		virtual void updateCurrent(sf::Time dt);
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 		bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
 
+		int mTimeSinceLastTetrominoMovement = 0;
+		bool mNeedNewTetromino = false;
+
 		const sf::Vector2u GRID_SIZE = sf::Vector2u(10, 22);
 
 		std::array<Tile, 220> mTiles;
 		std::unordered_map<sf::Vector2u, std::unique_ptr<Tetromino>> mTetrominos;
-		Tetromino* mCurrentTetromino;
-		sf::RectangleShape mGridRect;
+		Tetromino* mCurrentTetromino = nullptr;
+		sf::RectangleShape mGridRectangle;
 };
 

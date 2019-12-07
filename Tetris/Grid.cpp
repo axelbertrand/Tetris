@@ -2,12 +2,12 @@
 #include "TetrominoFactory.h"
 
 Grid::Grid()
-	: mGridRect(sf::Vector2f(GRID_SIZE))
+	: mGridRectangle(sf::Vector2f(GRID_SIZE))
 {
-	mGridRect.scale(20.f, 20.f);
-	mGridRect.setFillColor(sf::Color(128, 212, 255, 100));
-	sf::FloatRect bounds = mGridRect.getLocalBounds();
-	mGridRect.setOrigin(std::floor(bounds.left + bounds.width / 2.f), 0.f);
+	mGridRectangle.scale(20.f, 20.f);
+	mGridRectangle.setFillColor(sf::Color(128, 212, 255, 100));
+	sf::FloatRect bounds = mGridRectangle.getLocalBounds();
+	mGridRectangle.setOrigin(std::floor(bounds.left + bounds.width / 2.f), 0.f);
 }
 
 Grid::~Grid()
@@ -16,7 +16,8 @@ Grid::~Grid()
 
 bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 {
-	sf::Vector2u startingPosition(5, 0);
+	// Up-centered
+	sf::Vector2u startingPosition(4, 0);
 	if (checkCollision(tetromino.get(), startingPosition))
 	{
 		return false;
@@ -29,15 +30,16 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& tile = mTiles.at((startingPosition.x + i) * 4 + (startingPosition.y + j));
-				tile.color = tetromino->getColor();
-				tile.value = tetromino->getValue();
+				std::size_t tileIndex = (startingPosition.x + j) * GRID_SIZE.x + (startingPosition.y + i);
+				mTiles.at(tileIndex).color = tetromino->getColor();
+				mTiles.at(tileIndex).value = tetromino->getValue();
 			}
 		}
 	}
 
 	mCurrentTetromino = tetromino.get();
 	mTetrominos.insert(std::make_pair(startingPosition, std::move(tetromino)));
+	mNeedNewTetromino = false;
 
 	return true;
 }
@@ -66,9 +68,9 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
-				oldTile.value = 0;
-				oldTile.color = sf::Color::Transparent;
+				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+				mTiles.at(tileIndex).value = 0;
+				mTiles.at(tileIndex).color = sf::Color::Transparent;
 			}
 		}
 	}
@@ -81,9 +83,9 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 			{
 				if (tetrominoShape.test(i * 4 + j))
 				{
-					Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
-					oldTile.value = mCurrentTetromino->getValue();
-					oldTile.color = mCurrentTetromino->getColor();
+					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+					mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 				}
 			}
 		}
@@ -97,9 +99,9 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& newTile = mTiles.at((newPosition.x + i) * 4 + (newPosition.y + j));
-				newTile.value = mCurrentTetromino->getValue();
-				newTile.color = mCurrentTetromino->getColor();
+				std::size_t tileIndex = (newPosition.x + j) * GRID_SIZE.x + (newPosition.y + i);
+				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+				mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 			}
 		}
 	}
@@ -134,9 +136,9 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
-				oldTile.value = 0;
-				oldTile.color = sf::Color::Transparent;
+				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+				mTiles.at(tileIndex).value = 0;
+				mTiles.at(tileIndex).color = sf::Color::Transparent;
 			}
 		}
 	}
@@ -151,9 +153,9 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 			{
 				if (tetrominoShape.test(i * 4 + j))
 				{
-					Tile& oldTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
-					oldTile.value = mCurrentTetromino->getValue();
-					oldTile.color = mCurrentTetromino->getColor();
+					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+					mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 				}
 			}
 		}
@@ -171,9 +173,9 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				Tile& newTile = mTiles.at((currentTetrominoPosition.x + i) * 4 + (currentTetrominoPosition.y + j));
-				newTile.value = mCurrentTetromino->getValue();
-				newTile.color = mCurrentTetromino->getColor();
+				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+				mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 			}
 		}
 	}
@@ -181,19 +183,40 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 	return true;
 }
 
-Tetromino* Grid::getCurrentTetromino() const
+bool Grid::needNewTetromino() const
 {
-	return mCurrentTetromino;
+	return mNeedNewTetromino;
 }
 
 void Grid::updateCurrent(sf::Time dt)
 {
+	mTimeSinceLastTetrominoMovement += dt.asMilliseconds();
 
+	if (mTimeSinceLastTetrominoMovement >= 1000)
+	{
+		if (!moveCurrentTetromino(sf::Vector2i(0, 1)))
+		{
+			mNeedNewTetromino = true;
+		}
+
+		mTimeSinceLastTetrominoMovement -= 1000;
+	}
 }
 
 void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	target.draw(mGridRect, states);
+	target.draw(mGridRectangle, states);
+
+	for (int x = 0; x < GRID_SIZE.x; ++x)
+	{
+		for (int y = 0; y < GRID_SIZE.y; ++y)
+		{
+			sf::RectangleShape tileRectangle({ 20.f, 20.f });
+			tileRectangle.setPosition({ (x - static_cast<int>(GRID_SIZE.x / 2)) * 20.f, y * 20.f });
+			tileRectangle.setFillColor(mTiles.at(x * GRID_SIZE.x + y).color);
+			target.draw(tileRectangle, states);
+		}
+	}
 }
 
 bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const
@@ -208,7 +231,7 @@ bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) co
 			{
 				if (position.x + i < GRID_SIZE.x && position.y + j < GRID_SIZE.y)
 				{
-					if (mTiles.at((position.x + i) * 4 + (position.y + j)).value != 0)
+					if (mTiles.at((position.x + j) * GRID_SIZE.x + (position.y + i)).value != 0)
 					{
 						return true;
 					}

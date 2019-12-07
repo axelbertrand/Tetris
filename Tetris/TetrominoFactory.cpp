@@ -9,37 +9,37 @@ std::unique_ptr<Tetromino> TetrominoFactory::createRandomTetromino()
 	{
 		case Tetromino::Type::I :
 			// XXXX
-			return std::make_unique<Tetromino>(0b1111000000000000,  sf::Color::Cyan);
+			return std::make_unique<Tetromino>(0b0000000000001111,  sf::Color::Cyan);
 
 		case Tetromino::Type::J :
 			// XXX
 			//   X
-			return std::make_unique<Tetromino>(0b1110001000000000, sf::Color::Blue);
+			return std::make_unique<Tetromino>(0b0000000001000111, sf::Color::Blue);
 
 		case Tetromino::Type::L :
 			// XXX
 			// X
-			return std::make_unique<Tetromino>(0b1110100000000000, sf::Color(255, 153, 0)); // Orange
+			return std::make_unique<Tetromino>(0b0000000000010111, sf::Color(255, 153, 0)); // Orange
 
 		case Tetromino::Type::O :
 			// XX
 			// XX
-			return std::make_unique<Tetromino>(0b1100110000000000, sf::Color::Yellow);
+			return std::make_unique<Tetromino>(0b0000000000110011, sf::Color::Yellow);
 
 		case Tetromino::Type::S :
 			//  XX
 			// XX
-			return std::make_unique<Tetromino>(0b0110110000000000, sf::Color::Green);
+			return std::make_unique<Tetromino>(0b0000000000110110, sf::Color::Green);
 
 		case Tetromino::Type::T :
 			// XXX
 			//  X
-			return std::make_unique<Tetromino>(0b1110010000000000, sf::Color(204, 102, 255)); // Purple
+			return std::make_unique<Tetromino>(0b0000000000100111, sf::Color(204, 102, 255)); // Purple
 
 		case Tetromino::Type::Z :
 			// XX
 			//  XX
-			return std::make_unique<Tetromino>(0b1100011000000000, sf::Color::Red);
+			return std::make_unique<Tetromino>(0b0000000001100011, sf::Color::Red);
 	}
 }
 

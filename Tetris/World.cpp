@@ -27,7 +27,7 @@ void World::update(sf::Time dt)
 	mLevelDisplay->setString(std::to_string(mLevel));
 	mLinesNumberDisplay->setString(std::to_string(mLinesNumber));
 
-	if (!mTetrisGrid->moveCurrentTetromino(sf::Vector2i(0, 1)))
+	if (mTetrisGrid->needNewTetromino())
 	{
 		std::unique_ptr<Tetromino> nextTetromino = mTetrominoFactory.createRandomTetromino();
 		if (!mTetrisGrid->addTetromino(std::move(nextTetromino)))
