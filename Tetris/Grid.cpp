@@ -30,7 +30,7 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				std::size_t tileIndex = (startingPosition.x + j) * GRID_SIZE.x + (startingPosition.y + i);
+				std::size_t tileIndex = (startingPosition.x + j) * GRID_SIZE.y + (startingPosition.y + i);
 				mTiles.at(tileIndex).color = tetromino->getColor();
 				mTiles.at(tileIndex).value = tetromino->getValue();
 			}
@@ -68,7 +68,7 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 				mTiles.at(tileIndex).value = 0;
 				mTiles.at(tileIndex).color = sf::Color::Transparent;
 			}
@@ -83,7 +83,7 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 			{
 				if (tetrominoShape.test(i * 4 + j))
 				{
-					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
 					mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 				}
@@ -99,7 +99,7 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				std::size_t tileIndex = (newPosition.x + j) * GRID_SIZE.x + (newPosition.y + i);
+				std::size_t tileIndex = (newPosition.x + j) * GRID_SIZE.y + (newPosition.y + i);
 				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
 				mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 			}
@@ -136,7 +136,7 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 				mTiles.at(tileIndex).value = 0;
 				mTiles.at(tileIndex).color = sf::Color::Transparent;
 			}
@@ -153,7 +153,7 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 			{
 				if (tetrominoShape.test(i * 4 + j))
 				{
-					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
 					mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 				}
@@ -173,7 +173,7 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.x + (currentTetrominoPosition.y + i);
+				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
 				mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 			}
@@ -213,7 +213,7 @@ void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
 		{
 			sf::RectangleShape tileRectangle({ 20.f, 20.f });
 			tileRectangle.setPosition({ (x - static_cast<int>(GRID_SIZE.x / 2)) * 20.f, y * 20.f });
-			tileRectangle.setFillColor(mTiles.at(x * GRID_SIZE.x + y).color);
+			tileRectangle.setFillColor(mTiles.at(x * GRID_SIZE.y + y).color);
 			target.draw(tileRectangle, states);
 		}
 	}
@@ -231,7 +231,7 @@ bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) co
 			{
 				if (position.x + i < GRID_SIZE.x && position.y + j < GRID_SIZE.y)
 				{
-					if (mTiles.at((position.x + j) * GRID_SIZE.x + (position.y + i)).value != 0)
+					if (mTiles.at((position.x + j) * GRID_SIZE.y + (position.y + i)).value != 0)
 					{
 						return true;
 					}
