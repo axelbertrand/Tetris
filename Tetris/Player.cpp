@@ -4,8 +4,8 @@
 
 struct TetrominoMover
 {
-	TetrominoMover(int vx, int vy) :
-	velocity(vx, vy)
+	TetrominoMover(int vx, int vy)
+		: velocity(vx, vy)
 	{
 	}
 
@@ -36,7 +36,7 @@ Player::Player()
 	initializeActions();
 
 	for(auto& pair : mActionBinding)
-		pair.second.category = Category::CurrentTetromino;
+		pair.second.category = Category::Grid;
 }
 
 Player::~Player()
@@ -88,12 +88,10 @@ sf::Keyboard::Key Player::getAssignedKey(Action action) const
 
 void Player::initializeActions()
 {
-	const int tetrominoSpeed = 20.f;
-
-	mActionBinding[Action::MoveLeft].action = derivedAction<Grid>(TetrominoMover(-tetrominoSpeed, 0));
-	mActionBinding[Action::MoveRight].action = derivedAction<Grid>(TetrominoMover(tetrominoSpeed, 0));
-	mActionBinding[Action::SoftDrop].action = derivedAction<Grid>(TetrominoMover(0, tetrominoSpeed));
-	mActionBinding[Action::HardDrop].action = derivedAction<Grid>(TetrominoMover(0, -tetrominoSpeed));
+	mActionBinding[Action::MoveLeft].action = derivedAction<Grid>(TetrominoMover(-1, 0));
+	mActionBinding[Action::MoveRight].action = derivedAction<Grid>(TetrominoMover(1, 0));
+	mActionBinding[Action::SoftDrop].action = derivedAction<Grid>(TetrominoMover(0, 1));
+	mActionBinding[Action::HardDrop].action = derivedAction<Grid>(TetrominoMover(0, -1));
 	mActionBinding[Action::Rotate].action = derivedAction<Grid>(TetrominoRotator());
 }
 

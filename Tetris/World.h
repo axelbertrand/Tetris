@@ -24,7 +24,6 @@ class World : private sf::NonCopyable
 		void loadTextures();
 		void buildScene();
 		void createTetromino();
-		sf::FloatRect getGridBounds() const;
 
 		sf::RenderWindow& mWindow;
 		TextureHolder& mTextures;

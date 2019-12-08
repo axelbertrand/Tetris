@@ -37,6 +37,8 @@ class Grid : public SceneNode
 
 		bool needNewTetromino() const;
 
+		virtual Category getCategory() const;
+
 	private :
 		virtual void updateCurrent(sf::Time dt);
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;

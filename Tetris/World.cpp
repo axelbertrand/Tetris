@@ -119,9 +119,3 @@ void World::createTetromino()
 {
 	mTetrisGrid->addTetromino(mTetrominoFactory.createRandomTetromino());
 }
-
-sf::FloatRect World::getGridBounds() const
-{
-	sf::FloatRect gridBounds = mTetrisGrid->getBoundingRect();
-	return sf::FloatRect(gridBounds.left - mTetrisGrid->getWorldPosition().x, gridBounds.top - mTetrisGrid->getWorldPosition().y, gridBounds.width, gridBounds.height);
-}

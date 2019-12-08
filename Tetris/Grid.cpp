@@ -188,6 +188,11 @@ bool Grid::needNewTetromino() const
 	return mNeedNewTetromino;
 }
 
+Category Grid::getCategory() const
+{
+	return Category::Grid;
+}
+
 void Grid::updateCurrent(sf::Time dt)
 {
 	mTimeSinceLastTetrominoMovement += dt.asMilliseconds();
@@ -229,7 +234,7 @@ bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) co
 		{
 			if (tetrominoShape.test(i * 4 + j))
 			{
-				if (position.x + i < GRID_SIZE.x && position.y + j < GRID_SIZE.y)
+				if (position.x + j < GRID_SIZE.x && position.y + i < GRID_SIZE.y)
 				{
 					if (mTiles.at((position.x + j) * GRID_SIZE.y + (position.y + i)).value != 0)
 					{
