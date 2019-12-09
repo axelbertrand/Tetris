@@ -24,11 +24,11 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 	}
 
 	std::bitset<16> tetrominoShape = tetromino->getShape();
-	for (std::size_t i = 0; i < 4; ++i)
+	for (std::size_t i = 0; i < tetromino->getMaxSize(); ++i)
 	{
-		for (std::size_t j = 0; j < 4; ++j)
+		for (std::size_t j = 0; j < tetromino->getMaxSize(); ++j)
 		{
-			if (tetrominoShape.test(i * 4 + j))
+			if (tetrominoShape.test(i * tetromino->getMaxSize() + j))
 			{
 				std::size_t tileIndex = (startingPosition.x + j) * GRID_SIZE.y + (startingPosition.y + i);
 				mTiles.at(tileIndex).color = tetromino->getColor();
@@ -62,11 +62,11 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 
 	sf::Vector2u newPosition(currentTetrominoPosition.x + deltaPosition.x, currentTetrominoPosition.y + deltaPosition.y);
 
-	for (std::size_t i = 0; i < 4; ++i)
+	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
 	{
-		for (std::size_t j = 0; j < 4; ++j)
+		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
 		{
-			if (tetrominoShape.test(i * 4 + j))
+			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
 			{
 				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 				mTiles.at(tileIndex).value = 0;
@@ -77,11 +77,11 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 
 	if (checkCollision(mCurrentTetromino, newPosition))
 	{
-		for (std::size_t i = 0; i < 4; ++i)
+		for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
 		{
-			for (std::size_t j = 0; j < 4; ++j)
+			for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
 			{
-				if (tetrominoShape.test(i * 4 + j))
+				if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
 				{
 					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
@@ -93,11 +93,11 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 		return false;
 	}
 
-	for (std::size_t i = 0; i < 4; ++i)
+	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
 	{
-		for (std::size_t j = 0; j < 4; ++j)
+		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
 		{
-			if (tetrominoShape.test(i * 4 + j))
+			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
 			{
 				std::size_t tileIndex = (newPosition.x + j) * GRID_SIZE.y + (newPosition.y + i);
 				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
@@ -130,11 +130,11 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 
 	sf::Vector2u currentTetrominoPosition = foundIterator->first;
 
-	for (std::size_t i = 0; i < 4; ++i)
+	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
 	{
-		for (std::size_t j = 0; j < 4; ++j)
+		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
 		{
-			if (tetrominoShape.test(i * 4 + j))
+			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
 			{
 				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 				mTiles.at(tileIndex).value = 0;
@@ -147,11 +147,11 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 
 	if (checkCollision(mCurrentTetromino, currentTetrominoPosition))
 	{
-		for (std::size_t i = 0; i < 4; ++i)
+		for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
 		{
-			for (std::size_t j = 0; j < 4; ++j)
+			for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
 			{
-				if (tetrominoShape.test(i * 4 + j))
+				if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
 				{
 					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
@@ -167,11 +167,11 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 
 	tetrominoShape = mCurrentTetromino->getShape();
 
-	for (std::size_t i = 0; i < 4; ++i)
+	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
 	{
-		for (std::size_t j = 0; j < 4; ++j)
+		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
 		{
-			if (tetrominoShape.test(i * 4 + j))
+			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
 			{
 				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
 				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
@@ -228,11 +228,11 @@ bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) co
 {
 	std::bitset<16> tetrominoShape = tetromino->getShape();
 
-	for (std::size_t i = 0; i < 4; ++i)
+	for (std::size_t i = 0; i < tetromino->getMaxSize(); ++i)
 	{
-		for (std::size_t j = 0; j < 4; ++j)
+		for (std::size_t j = 0; j < tetromino->getMaxSize(); ++j)
 		{
-			if (tetrominoShape.test(i * 4 + j))
+			if (tetrominoShape.test(i * tetromino->getMaxSize() + j))
 			{
 				if (position.x + j < GRID_SIZE.x && position.y + i < GRID_SIZE.y)
 				{

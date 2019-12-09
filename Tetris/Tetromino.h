@@ -12,18 +12,20 @@ class Tetromino
 			I, J, L, O, S, T, Z
 		};
 
-		Tetromino(uint16_t shape, sf::Color color);
+		Tetromino(uint16_t shape, std::size_t maxSize, sf::Color color);
 		Tetromino(const Tetromino& other) = delete;
 		virtual ~Tetromino();
 
 		void rotate(bool clockWise = true);
 
 		std::bitset<16> getShape() const;
+		std::size_t getMaxSize() const;
 		sf::Color getColor() const;
 		unsigned int getValue() const;
 
 	private:
 		std::bitset<16> mShape;
+		std::size_t mMaxSize;
 		sf::Color mColor;
 		unsigned int mValue;
 
