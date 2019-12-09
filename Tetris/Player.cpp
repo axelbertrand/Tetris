@@ -99,12 +99,6 @@ bool Player::isRealtimeAction(Player::Action action)
 {
 	switch (action)
 	{
-		case Action::MoveLeft :
-		case Action::MoveRight :
-		case Action::SoftDrop:
-		case Action::HardDrop :
-			return true;
-
 		default :
 			return false;
 	}

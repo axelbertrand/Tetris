@@ -18,8 +18,6 @@ mFpsText(),
 mFpsUpdateTime(),
 mFpsNumFrames(0)
 {
-	mWindow.setKeyRepeatEnabled(false);
-
 	mFonts.load(Fonts::Main, "PressStart2P.ttf");
 	mFonts.load(Fonts::Title, "Games.ttf");
 
