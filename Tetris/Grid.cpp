@@ -23,19 +23,11 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 		return false;
 	}
 
-	std::bitset<16> tetrominoShape = tetromino->getShape();
-	for (std::size_t i = 0; i < tetromino->getMaxSize(); ++i)
-	{
-		for (std::size_t j = 0; j < tetromino->getMaxSize(); ++j)
-		{
-			if (tetrominoShape.test(i * tetromino->getMaxSize() + j))
-			{
-				std::size_t tileIndex = (startingPosition.x + j) * GRID_SIZE.y + (startingPosition.y + i);
-				mTiles.at(tileIndex).color = tetromino->getColor();
-				mTiles.at(tileIndex).value = tetromino->getValue();
-			}
-		}
-	}
+	tetromino->forEachTile([this, &tetromino, &startingPosition](const std::size_t i, const std::size_t j) {
+		std::size_t tileIndex = (startingPosition.x + j) * GRID_SIZE.y + (startingPosition.y + i);
+		mTiles.at(tileIndex).color = tetromino->getColor();
+		mTiles.at(tileIndex).value = tetromino->getValue();
+	});
 
 	mCurrentTetromino = tetromino.get();
 	mTetrominos.insert(std::make_pair(startingPosition, std::move(tetromino)));
@@ -46,8 +38,6 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 
 bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 {
-	std::bitset<16> tetrominoShape = mCurrentTetromino->getShape();
-
 	// Search for the current tetromino position
 	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [this](const auto& tetrominoPair) {
 		return tetrominoPair.second.get() == mCurrentTetromino;
@@ -62,49 +52,28 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 
 	sf::Vector2u newPosition(currentTetrominoPosition.x + deltaPosition.x, currentTetrominoPosition.y + deltaPosition.y);
 
-	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
-	{
-		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
-		{
-			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
-			{
-				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
-				mTiles.at(tileIndex).value = 0;
-				mTiles.at(tileIndex).color = sf::Color::Transparent;
-			}
-		}
-	}
+	mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
+		std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
+		mTiles.at(tileIndex).value = 0;
+		mTiles.at(tileIndex).color = sf::Color::Transparent;
+	});
 
 	if (checkCollision(mCurrentTetromino, newPosition))
 	{
-		for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
-		{
-			for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
-			{
-				if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
-				{
-					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
-					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
-					mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
-				}
-			}
-		}
+		mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
+			std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
+			mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+			mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
+		});
 
 		return false;
 	}
 
-	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
-	{
-		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
-		{
-			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
-			{
-				std::size_t tileIndex = (newPosition.x + j) * GRID_SIZE.y + (newPosition.y + i);
-				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
-				mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
-			}
-		}
-	}
+	mCurrentTetromino->forEachTile([this, &newPosition](const std::size_t i, const std::size_t j) {
+		std::size_t tileIndex = (newPosition.x + j) * GRID_SIZE.y + (newPosition.y + i);
+		mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+		mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
+	});
 
 	// Change the position of the tetromino to its new position
 	auto nodeHandle = mTetrominos.extract(currentTetrominoPosition);
@@ -116,8 +85,6 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 
 bool Grid::rotateCurrentTetromino(bool clockWise)
 {
-	std::bitset<16> tetrominoShape = mCurrentTetromino->getShape();
-
 	// Search for the current tetromino position
 	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [this](const auto& tetrominoPair) {
 		return tetrominoPair.second.get() == mCurrentTetromino;
@@ -130,55 +97,32 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 
 	sf::Vector2u currentTetrominoPosition = foundIterator->first;
 
-	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
-	{
-		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
-		{
-			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
-			{
-				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
-				mTiles.at(tileIndex).value = 0;
-				mTiles.at(tileIndex).color = sf::Color::Transparent;
-			}
-		}
-	}
+	mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
+		std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
+		mTiles.at(tileIndex).value = 0;
+		mTiles.at(tileIndex).color = sf::Color::Transparent;
+	});
 
 	mCurrentTetromino->rotate(clockWise);
 
 	if (checkCollision(mCurrentTetromino, currentTetrominoPosition))
 	{
-		for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
-		{
-			for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
-			{
-				if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
-				{
-					std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
-					mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
-					mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
-				}
-			}
-		}
-
 		mCurrentTetromino->rotate(!clockWise);
+
+		mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
+			std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
+			mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+			mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
+		});
 
 		return false;
 	}
 
-	tetrominoShape = mCurrentTetromino->getShape();
-
-	for (std::size_t i = 0; i < mCurrentTetromino->getMaxSize(); ++i)
-	{
-		for (std::size_t j = 0; j < mCurrentTetromino->getMaxSize(); ++j)
-		{
-			if (tetrominoShape.test(i * mCurrentTetromino->getMaxSize() + j))
-			{
-				std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
-				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
-				mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
-			}
-		}
-	}
+	mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
+		std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
+		mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+		mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
+	});
 
 	return true;
 }
@@ -226,28 +170,23 @@ void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
 
 bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const
 {
-	std::bitset<16> tetrominoShape = tetromino->getShape();
+	bool hasCollision = false;
 
-	for (std::size_t i = 0; i < tetromino->getMaxSize(); ++i)
-	{
-		for (std::size_t j = 0; j < tetromino->getMaxSize(); ++j)
+	tetromino->forEachTile([this, &position, &hasCollision](const std::size_t i, const std::size_t j) {
+		if (position.x + j < GRID_SIZE.x && position.y + i < GRID_SIZE.y)
 		{
-			if (tetrominoShape.test(i * tetromino->getMaxSize() + j))
+			if (mTiles.at((position.x + j) * GRID_SIZE.y + (position.y + i)).value != 0)
 			{
-				if (position.x + j < GRID_SIZE.x && position.y + i < GRID_SIZE.y)
-				{
-					if (mTiles.at((position.x + j) * GRID_SIZE.y + (position.y + i)).value != 0)
-					{
-						return true;
-					}
-				}
-				else
-				{
-					return true;
-				}
+				hasCollision = true;
+				return;
 			}
 		}
-	}
+		else
+		{
+			hasCollision = true;
+			return;
+		}
+	});
 
-	return false;
+	return hasCollision;
 }

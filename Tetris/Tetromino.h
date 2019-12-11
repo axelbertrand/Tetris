@@ -17,6 +17,7 @@ class Tetromino
 		virtual ~Tetromino();
 
 		void rotate(bool clockWise = true);
+		void forEachTile(std::function<void(std::size_t, std::size_t)> callback);
 
 		std::bitset<16> getShape() const;
 		std::size_t getMaxSize() const;

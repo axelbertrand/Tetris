@@ -49,6 +49,20 @@ void Tetromino::rotate(bool clockWise)
 	mShape = newShape;
 }
 
+void Tetromino::forEachTile(std::function<void(std::size_t, std::size_t)> callback)
+{
+	for (std::size_t i = 0; i < mMaxSize; ++i)
+	{
+		for (std::size_t j = 0; j < mMaxSize; ++j)
+		{
+			if (mShape.test(i * mMaxSize + j))
+			{
+				callback(i, j);
+			}
+		}
+	}
+}
+
 std::bitset<16> Tetromino::getShape() const
 {
 	return mShape;
