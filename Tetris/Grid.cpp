@@ -85,7 +85,7 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 	mCurrentTetromino->rotate(clockWise);
 
 	sf::Vector2u rotationPair(mCurrentTetromino->getRotationState(), (mCurrentTetromino->getRotationState() + ((clockWise) ? 1 : -1)) % 4);
-	std::array<sf::Vector2i, 5> collisionTests = ROTATION_WALL_KICKS.at(rotationPair);
+	std::array<sf::Vector2i, 5> collisionTests = (mCurrentTetromino->getType() == Tetromino::Type:I) ? ROTATION_WALL_KICKS.at(rotationPair) : ROTATION_WALL_KICKS_I.at(rotationPair);
 
 	for (const sf::Vector2i& translation : collisionTests)
 	{
@@ -211,4 +211,20 @@ std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> Grid::initializeRo
 	rotationWallKicks[{ 0, 3 }] = { sf::Vector2i{ 0, 0 }, {  1, 0 }, {  1,  1 }, { 0, -2 }, {  1, -2 } };
 
 	return rotationWallKicks;
+}
+
+std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> Grid::initializeRotationWallKicksI()
+{
+	std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> rotationWallKicksI;
+
+	rotationWallKicksI[{ 0, 1 }] = { sf::Vector2i{ 0, 0 }, { -2, 0 }, {  1, 0 }, { -2, -1 }, {  1,  2 } };
+	rotationWallKicksI[{ 1, 0 }] = { sf::Vector2i{ 0, 0 }, {  2, 0 }, { -1, 0 }, {  2,  1 }, { -1, -2 } };
+	rotationWallKicksI[{ 1, 2 }] = { sf::Vector2i{ 0, 0 }, { -1, 0 }, {  2, 0 }, { -1,  2 }, {  2, -1 } };
+	rotationWallKicksI[{ 2, 1 }] = { sf::Vector2i{ 0, 0 }, {  1, 0 }, { -2, 0 }, {  1, -2 }, { -2,  1 } };
+	rotationWallKicksI[{ 2, 3 }] = { sf::Vector2i{ 0, 0 }, {  2, 0 }, { -1, 0 }, {  2,  1 }, { -1, -2 } };
+	rotationWallKicksI[{ 3, 2 }] = { sf::Vector2i{ 0, 0 }, { -2, 0 }, {  1, 0 }, { -2, -1 }, {  1,  2 } };
+	rotationWallKicksI[{ 3, 0 }] = { sf::Vector2i{ 0, 0 }, {  1, 0 }, { -2, 0 }, {  1, -2 }, { -2,  1 } };
+	rotationWallKicksI[{ 0, 3 }] = { sf::Vector2i{ 0, 0 }, { -1, 0 }, {  2, 0 }, { -1,  2 }, {  2, -1 } };
+
+	return rotationWallKicksI;
 }

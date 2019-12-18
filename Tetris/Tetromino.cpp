@@ -2,10 +2,11 @@
 
 unsigned int Tetromino::sMaxValue = 0;
 
-Tetromino::Tetromino(uint16_t shape, std::size_t maxSize, sf::Color color)
+Tetromino::Tetromino(uint16_t shape, std::size_t maxSize, sf::Color color, Type type)
 	: mShape(shape)
 	, mMaxSize(maxSize)
 	, mColor(color)
+	, mType(type)
 	, mRotationState(0)
 	, mValue(++sMaxValue)
 {
@@ -79,6 +80,11 @@ std::size_t Tetromino::getMaxSize() const
 sf::Color Tetromino::getColor() const
 {
 	return mColor;
+}
+
+Tetromino::Type Tetromino::getType() const
+{
+	return mType;
 }
 
 unsigned int Tetromino::getRotationState() const

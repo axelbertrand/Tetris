@@ -48,6 +48,7 @@ class Grid : public SceneNode
 		sf::Vector2u getCurrentTetrominoPosition() const;
 
 		static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicks();
+		static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicksI();
 
 		int mTimeSinceLastTetrominoMovement = 0;
 		bool mNeedNewTetromino = false;
@@ -60,5 +61,6 @@ class Grid : public SceneNode
 		sf::RectangleShape mGridRectangle;
 
 		const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS = initializeRotationWallKicks();
+		const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS_I = initializeRotationWallKicksI();
 };
 
