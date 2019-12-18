@@ -22,12 +22,14 @@ class Tetromino
 		std::bitset<16> getShape() const;
 		std::size_t getMaxSize() const;
 		sf::Color getColor() const;
+		unsigned int getRotationState() const;
 		unsigned int getValue() const;
 
 	private:
 		std::bitset<16> mShape;
 		std::size_t mMaxSize;
 		sf::Color mColor;
+		unsigned int mRotationState;
 		unsigned int mValue;
 
 		static unsigned int sMaxValue;

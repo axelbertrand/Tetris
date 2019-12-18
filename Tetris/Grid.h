@@ -44,6 +44,11 @@ class Grid : public SceneNode
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 		bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
 
+		void updateTetrominoPositionMapping(const sf::Vector2u& oldPosition, const sf::Vector2u& newPosition);
+		sf::Vector2u getCurrentTetrominoPosition() const;
+
+		static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicks();
+
 		int mTimeSinceLastTetrominoMovement = 0;
 		bool mNeedNewTetromino = false;
 
@@ -53,5 +58,7 @@ class Grid : public SceneNode
 		std::unordered_map<sf::Vector2u, std::unique_ptr<Tetromino>> mTetrominos;
 		Tetromino* mCurrentTetromino = nullptr;
 		sf::RectangleShape mGridRectangle;
+
+		const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS = initializeRotationWallKicks();
 };
 

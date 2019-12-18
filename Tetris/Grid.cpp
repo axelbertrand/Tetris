@@ -1,4 +1,6 @@
 #include "Grid.h"
+
+#include <cassert>
 #include "TetrominoFactory.h"
 
 Grid::Grid()
@@ -38,17 +40,7 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 
 bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 {
-	// Search for the current tetromino position
-	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [this](const auto& tetrominoPair) {
-		return tetrominoPair.second.get() == mCurrentTetromino;
-	});
-
-	if (foundIterator == mTetrominos.end())
-	{
-		return false;
-	}
-
-	sf::Vector2u currentTetrominoPosition = foundIterator->first;
+	sf::Vector2u currentTetrominoPosition = getCurrentTetrominoPosition();
 
 	sf::Vector2u newPosition(currentTetrominoPosition.x + deltaPosition.x, currentTetrominoPosition.y + deltaPosition.y);
 
@@ -75,27 +67,14 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 		mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 	});
 
-	// Change the position of the tetromino to its new position
-	auto nodeHandle = mTetrominos.extract(currentTetrominoPosition);
-	nodeHandle.key() = newPosition;
-	mTetrominos.insert(std::move(nodeHandle));
+	updateTetrominoPositionMapping(currentTetrominoPosition, newPosition);
 
 	return true;
 }
 
 bool Grid::rotateCurrentTetromino(bool clockWise)
 {
-	// Search for the current tetromino position
-	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [this](const auto& tetrominoPair) {
-		return tetrominoPair.second.get() == mCurrentTetromino;
-	});
-
-	if (foundIterator == mTetrominos.end())
-	{
-		return false;
-	}
-
-	sf::Vector2u currentTetrominoPosition = foundIterator->first;
+	sf::Vector2u currentTetrominoPosition = getCurrentTetrominoPosition();
 
 	mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
 		std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
@@ -105,18 +84,27 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 
 	mCurrentTetromino->rotate(clockWise);
 
-	if (checkCollision(mCurrentTetromino, currentTetrominoPosition))
+	sf::Vector2u rotationPair(mCurrentTetromino->getRotationState(), (mCurrentTetromino->getRotationState() + ((clockWise) ? 1 : -1)) % 4);
+	std::array<sf::Vector2i, 5> collisionTests = ROTATION_WALL_KICKS.at(rotationPair);
+
+	for (const sf::Vector2i& translation : collisionTests)
 	{
-		mCurrentTetromino->rotate(!clockWise);
+		sf::Vector2u newPosition(currentTetrominoPosition.x + translation.x, currentTetrominoPosition.y + translation.y);
+		if (!checkCollision(mCurrentTetromino, newPosition))
+		{
+			mCurrentTetromino->forEachTile([this, &newPosition](const std::size_t i, const std::size_t j) {
+				std::size_t tileIndex = (newPosition.x + j) * GRID_SIZE.y + (newPosition.y + i);
+				mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
+				mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
+			});
 
-		mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
-			std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
-			mTiles.at(tileIndex).value = mCurrentTetromino->getValue();
-			mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
-		});
+			updateTetrominoPositionMapping(currentTetrominoPosition, newPosition);
 
-		return false;
+			return true;
+		}
 	}
+
+	mCurrentTetromino->rotate(!clockWise);
 
 	mCurrentTetromino->forEachTile([this, &currentTetrominoPosition](const std::size_t i, const std::size_t j) {
 		std::size_t tileIndex = (currentTetrominoPosition.x + j) * GRID_SIZE.y + (currentTetrominoPosition.y + i);
@@ -124,7 +112,7 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 		mTiles.at(tileIndex).color = mCurrentTetromino->getColor();
 	});
 
-	return true;
+	return false;
 }
 
 bool Grid::needNewTetromino() const
@@ -189,4 +177,38 @@ bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) co
 	});
 
 	return hasCollision;
+}
+
+void Grid::updateTetrominoPositionMapping(const sf::Vector2u& oldPosition, const sf::Vector2u& newPosition)
+{
+	auto nodeHandle = mTetrominos.extract(oldPosition);
+	nodeHandle.key() = newPosition;
+	mTetrominos.insert(std::move(nodeHandle));
+}
+
+sf::Vector2u Grid::getCurrentTetrominoPosition() const
+{
+	auto foundIterator = std::find_if(mTetrominos.begin(), mTetrominos.end(), [this](const auto& tetrominoPair) {
+		return tetrominoPair.second.get() == mCurrentTetromino;
+	});
+
+	assert(foundIterator != mTetrominos.end());
+
+	return foundIterator->first;
+}
+
+std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> Grid::initializeRotationWallKicks()
+{
+	std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> rotationWallKicks;
+
+	rotationWallKicks[{ 0, 1 }] = { sf::Vector2i{ 0, 0 }, { -1, 0 }, { -1,  1 }, { 0, -2 }, { -1, -2 } };
+	rotationWallKicks[{ 1, 0 }] = { sf::Vector2i{ 0, 0 }, {  1, 0 }, {  1, -1 }, { 0,  2 }, {  1,  2 } };
+	rotationWallKicks[{ 1, 2 }] = { sf::Vector2i{ 0, 0 }, {  1, 0 }, {  1, -1 }, { 0,  2 }, {  1,  2 } };
+	rotationWallKicks[{ 2, 1 }] = { sf::Vector2i{ 0, 0 }, { -1, 0 }, { -1,  1 }, { 0, -2 }, { -1, -2 } };
+	rotationWallKicks[{ 2, 3 }] = { sf::Vector2i{ 0, 0 }, {  1, 0 }, {  1,  1 }, { 0, -2 }, {  1, -2 } };
+	rotationWallKicks[{ 3, 2 }] = { sf::Vector2i{ 0, 0 }, { -1, 0 }, { -1, -1 }, { 0,  2 }, { -1,  2 } };
+	rotationWallKicks[{ 3, 0 }] = { sf::Vector2i{ 0, 0 }, { -1, 0 }, { -1, -1 }, { 0,  2 }, { -1,  2 } };
+	rotationWallKicks[{ 0, 3 }] = { sf::Vector2i{ 0, 0 }, {  1, 0 }, {  1,  1 }, { 0, -2 }, {  1, -2 } };
+
+	return rotationWallKicks;
 }

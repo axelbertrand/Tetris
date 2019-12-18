@@ -6,6 +6,7 @@ Tetromino::Tetromino(uint16_t shape, std::size_t maxSize, sf::Color color)
 	: mShape(shape)
 	, mMaxSize(maxSize)
 	, mColor(color)
+	, mRotationState(0)
 	, mValue(++sMaxValue)
 {
 }
@@ -31,6 +32,7 @@ void Tetromino::rotate(bool clockWise)
 			}
 			++ni;
 		}
+		mRotationState = (mRotationState + 1) % 4;
 	}
 	else
 	{
@@ -44,6 +46,7 @@ void Tetromino::rotate(bool clockWise)
 			}
 			++ni;
 		}
+		mRotationState = (mRotationState - 1) % 4;
 	}
 
 	mShape = newShape;
@@ -76,6 +79,11 @@ std::size_t Tetromino::getMaxSize() const
 sf::Color Tetromino::getColor() const
 {
 	return mColor;
+}
+
+unsigned int Tetromino::getRotationState() const
+{
+	return mRotationState;
 }
 
 unsigned int Tetromino::getValue() const
