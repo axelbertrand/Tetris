@@ -194,8 +194,13 @@ std::size_t Grid::positionToIndex(const sf::Vector2u& position) const
 void Grid::updateTetrominoPositionMapping(const sf::Vector2u& oldPosition, const sf::Vector2u& newPosition)
 {
 	auto nodeHandle = mTetrominos.extract(oldPosition);
+	bool b = nodeHandle.empty();
 	nodeHandle.key() = newPosition;
-	mTetrominos.insert(std::move(nodeHandle));
+	auto insertedNode = mTetrominos.insert(std::move(nodeHandle));
+
+	assert(insertedNode.inserted);
+
+	mCurrentTetromino = mTetrominos.at(newPosition).get();
 }
 
 sf::Vector2u Grid::getCurrentTetrominoPosition() const
@@ -204,8 +209,7 @@ sf::Vector2u Grid::getCurrentTetrominoPosition() const
 		return tetrominoPair.second.get() == mCurrentTetromino;
 	});
 
-	bool b = foundIterator != mTetrominos.end();
-	assert(b == true);
+	assert(foundIterator != mTetrominos.end());
 
 	return foundIterator->first;
 }
