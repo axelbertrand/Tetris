@@ -85,7 +85,7 @@ bool Grid::rotateCurrentTetromino(bool clockWise)
 	mCurrentTetromino->rotate(clockWise);
 
 	sf::Vector2u rotationPair(mCurrentTetromino->getRotationState(), (mCurrentTetromino->getRotationState() + ((clockWise) ? 1 : -1)) % 4);
-	std::array<sf::Vector2i, 5> collisionTests = (mCurrentTetromino->getType() == Tetromino::Type:I) ? ROTATION_WALL_KICKS.at(rotationPair) : ROTATION_WALL_KICKS_I.at(rotationPair);
+	std::array<sf::Vector2i, 5> collisionTests = (mCurrentTetromino->getType() == Tetromino::Type::I) ? ROTATION_WALL_KICKS_I.at(rotationPair) : ROTATION_WALL_KICKS.at(rotationPair);
 
 	for (const sf::Vector2i& translation : collisionTests)
 	{
