@@ -43,6 +43,8 @@ class Grid : public SceneNode
 		virtual void updateCurrent(sf::Time dt);
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 		bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
+		void removeCompletedLines();
+		std::size_t positionToIndex(const sf::Vector2u& position) const;
 
 		void updateTetrominoPositionMapping(const sf::Vector2u& oldPosition, const sf::Vector2u& newPosition);
 		sf::Vector2u getCurrentTetrominoPosition() const;
