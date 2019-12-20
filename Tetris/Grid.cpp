@@ -131,7 +131,10 @@ void Grid::updateCurrent(sf::Time dt)
 			mNeedNewTetromino = true;
 		}
 
-		removeCompletedLines();
+		if (mNeedNewTetromino)
+		{
+			removeCompletedLines();
+		}
 
 		mTimeSinceLastTetrominoMovement -= 1000;
 	}
@@ -178,14 +181,16 @@ bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) co
 
 void Grid::removeCompletedLines()
 {
-	int lineCount = 0;
+	unsigned int totalLineCount = 0;
+	unsigned int lastCompletedLine = GRID_SIZE.y - 1;
 	for (unsigned int i = GRID_SIZE.y - 1; i != static_cast<unsigned int>(-1); --i)
 	{
-		if (lineCount >= 4)
+		if (totalLineCount >= 4)
 		{
 			break;
 		}
 
+		// Check if line is completed
 		bool isLineCompleted = true;
 		for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
 		{
@@ -197,11 +202,53 @@ void Grid::removeCompletedLines()
 
 		if (isLineCompleted)
 		{
-			// TODO: remove lines
+			// Remove the line at i
+			for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
+			{
+				mTiles.at(positionToIndex({ j, i })).value = 0;
+				mTiles.at(positionToIndex({ j, i })).color = sf::Color::Transparent;
+			}
 
-			++lineCount;
+			lastCompletedLine = i;
+
+			++totalLineCount;
 		}
 	}
+
+	// Move down tetrominos
+	if (totalLineCount > 0)
+	{
+		for (unsigned int i = lastCompletedLine + totalLineCount - 1; i != static_cast<unsigned int>(-1 + totalLineCount); --i)
+		{
+			bool lineEmpty = true;
+			for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
+			{
+				if (mTiles.at(positionToIndex({ j, i - totalLineCount })).value != 0)
+				{
+					lineEmpty = false;
+					break;
+				}
+			}
+
+			if (lineEmpty)
+			{
+				for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
+				{
+					mTiles.at(positionToIndex({ j, i })).value = 0;
+					mTiles.at(positionToIndex({ j, i })).color = sf::Color::Transparent;
+				}
+
+				break;
+			}
+
+			for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
+			{
+				mTiles.at(positionToIndex({ j, i })).value = mTiles.at(positionToIndex({ j, i - totalLineCount })).value;
+				mTiles.at(positionToIndex({ j, i })).color = mTiles.at(positionToIndex({ j, i - totalLineCount })).color;
+			}
+		}
+	}
+	
 }
 
 std::size_t Grid::positionToIndex(const sf::Vector2u& position) const
