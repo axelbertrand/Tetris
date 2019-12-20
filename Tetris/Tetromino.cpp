@@ -19,14 +19,14 @@ Tetromino::~Tetromino()
 void Tetromino::rotate(bool clockWise)
 {
 	std::bitset<16> newShape;
-	std::size_t ni = 0, nj = 0;
-	std::size_t i, j;
+	unsigned int ni = 0, nj = 0;
+	unsigned int i, j;
 	if (clockWise)
 	{
 		for (j = 0; j < mMaxSize; ++j)
 		{
 			nj = 0;
-			for (i = mMaxSize - 1; i != static_cast<std::size_t>(-1); --i)
+			for (i = mMaxSize - 1; i != static_cast<unsigned int>(-1); --i)
 			{
 				newShape[ni * mMaxSize + nj] = mShape[i * mMaxSize + j];
 				nj++;
@@ -37,7 +37,7 @@ void Tetromino::rotate(bool clockWise)
 	}
 	else
 	{
-		for (j = mMaxSize - 1; j != static_cast<std::size_t>(-1); --j)
+		for (j = mMaxSize - 1; j != static_cast<unsigned int>(-1); --j)
 		{
 			nj = 0;
 			for (i = 0; i < mMaxSize; ++i)
@@ -53,11 +53,11 @@ void Tetromino::rotate(bool clockWise)
 	mShape = newShape;
 }
 
-void Tetromino::forEachTile(std::function<void(std::size_t, std::size_t)> callback)
+void Tetromino::forEachTile(std::function<void(unsigned int, unsigned int)> callback)
 {
-	for (std::size_t i = 0; i < mMaxSize; ++i)
+	for (unsigned int i = 0; i < mMaxSize; ++i)
 	{
-		for (std::size_t j = 0; j < mMaxSize; ++j)
+		for (unsigned int j = 0; j < mMaxSize; ++j)
 		{
 			if (mShape.test(i * mMaxSize + j))
 			{
