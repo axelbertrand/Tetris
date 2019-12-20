@@ -2,33 +2,38 @@
 
 #include "Defs.h"
 #include "SceneNode.h"
-#include <memory>
+#include <bitset>
 
-class Tetromino : public SceneNode
+class Tetromino
 {
-	public :
-		typedef std::unique_ptr<Tetromino> Ptr;
-
+	public:
 		enum class Type
 		{
 			I, J, L, O, S, T, Z
 		};
 
-		static Type getRandomType();
-
-		Tetromino(std::vector<sf::Vector2f> shapePoints, sf::Color color);
+		Tetromino(uint16_t shape, std::size_t maxSize, sf::Color color, Type type);
+		Tetromino(const Tetromino& other) = delete;
 		virtual ~Tetromino();
 
-		virtual sf::FloatRect getBoundingRect() const;
+		void rotate(bool clockWise = true);
+		void forEachTile(std::function<void(std::size_t, std::size_t)> callback);
 
-		virtual Category getCategory() const;
+		std::bitset<16> getShape() const;
+		std::size_t getMaxSize() const;
+		sf::Color getColor() const;
+		Type getType() const;
+		unsigned int getRotationState() const;
+		unsigned int getValue() const;
 
-		void setPlaced(bool placed);
+	private:
+		std::bitset<16> mShape;
+		std::size_t mMaxSize;
+		sf::Color mColor;
+		Type mType;
+		unsigned int mRotationState;
+		unsigned int mValue;
 
-	private :
-		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
-
-		sf::VertexArray mVertexArray;
-		bool mIsPlaced;
+		static unsigned int sMaxValue;
 };
 

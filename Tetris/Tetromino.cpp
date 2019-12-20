@@ -1,73 +1,98 @@
 #include "Tetromino.h"
 
-#include <random>
-#include <chrono>
+unsigned int Tetromino::sMaxValue = 0;
 
-Tetromino::Tetromino(std::vector<sf::Vector2f> shapePoints, sf::Color color) :
-mVertexArray(sf::PrimitiveType::TriangleFan),
-mIsPlaced(false)
+Tetromino::Tetromino(uint16_t shape, std::size_t maxSize, sf::Color color, Type type)
+	: mShape(shape)
+	, mMaxSize(maxSize)
+	, mColor(color)
+	, mType(type)
+	, mRotationState(0)
+	, mValue(++sMaxValue)
 {
-	for(sf::Vector2f point : shapePoints)
-		mVertexArray.append(sf::Vertex(point, color));
-
-	sf::FloatRect bounds = mVertexArray.getBounds();
-	setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 }
 
 Tetromino::~Tetromino()
 {
 }
 
-Tetromino::Type Tetromino::getRandomType()
+void Tetromino::rotate(bool clockWise)
 {
-	std::default_random_engine randomEngine(std::chrono::system_clock::now().time_since_epoch().count());
-	std::uniform_int_distribution<int> distribution(0, 6);
-
-	Type tetrominoType;
-	switch (distribution(randomEngine))
+	std::bitset<16> newShape;
+	std::size_t ni = 0, nj = 0;
+	std::size_t i, j;
+	if (clockWise)
 	{
-		case 0 :
-			tetrominoType = Type::I;
-			break;
-		case 1:
-			tetrominoType = Type::J;
-			break;
-		case 2:
-			tetrominoType = Type::L;
-			break;
-		case 3:
-			tetrominoType = Type::O;
-			break;
-		case 4:
-			tetrominoType = Type::S;
-			break;
-		case 5:
-			tetrominoType = Type::T;
-			break;
-		case 6:
-			tetrominoType = Type::Z;
-			break;
+		for (j = 0; j < mMaxSize; ++j)
+		{
+			nj = 0;
+			for (i = mMaxSize - 1; i != static_cast<std::size_t>(-1); --i)
+			{
+				newShape[ni * mMaxSize + nj] = mShape[i * mMaxSize + j];
+				nj++;
+			}
+			++ni;
+		}
+		mRotationState = (mRotationState + 1) % 4;
+	}
+	else
+	{
+		for (j = mMaxSize - 1; j != static_cast<std::size_t>(-1); --j)
+		{
+			nj = 0;
+			for (i = 0; i < mMaxSize; ++i)
+			{
+				newShape[ni * mMaxSize + nj] = mShape[i * mMaxSize + j];
+				nj++;
+			}
+			++ni;
+		}
+		mRotationState = (mRotationState - 1) % 4;
 	}
 
-	return tetrominoType;
+	mShape = newShape;
 }
 
-sf::FloatRect Tetromino::getBoundingRect() const
+void Tetromino::forEachTile(std::function<void(std::size_t, std::size_t)> callback)
 {
-	return getWorldTransform().transformRect(mVertexArray.getBounds());
+	for (std::size_t i = 0; i < mMaxSize; ++i)
+	{
+		for (std::size_t j = 0; j < mMaxSize; ++j)
+		{
+			if (mShape.test(i * mMaxSize + j))
+			{
+				callback(i, j);
+			}
+		}
+	}
 }
 
-Category Tetromino::getCategory() const
+std::bitset<16> Tetromino::getShape() const
 {
-	return mIsPlaced ? Category::PlacedTetromino : Category::CurrentTetromino;
+	return mShape;
 }
 
-void Tetromino::setPlaced(bool placed)
+std::size_t Tetromino::getMaxSize() const
 {
-	mIsPlaced = placed;
+	return mMaxSize;
 }
 
-void Tetromino::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
+sf::Color Tetromino::getColor() const
 {
-	target.draw(mVertexArray, states);
+	return mColor;
+}
+
+Tetromino::Type Tetromino::getType() const
+{
+	return mType;
+}
+
+unsigned int Tetromino::getRotationState() const
+{
+	return mRotationState;
+}
+
+unsigned int Tetromino::getValue() const
+{
+	return mValue;
 }

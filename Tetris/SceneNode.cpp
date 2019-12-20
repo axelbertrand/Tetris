@@ -89,8 +89,3 @@ Category SceneNode::getCategory() const
 {
 	return Category::Scene;
 }
-
-sf::FloatRect SceneNode::getBoundingRect() const
-{
-	return sf::FloatRect();
-}
