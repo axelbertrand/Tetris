@@ -4,16 +4,11 @@
 #include "TetrominoFactory.h"
 
 Grid::Grid()
-	: mGridRectangle(sf::Vector2f(GRID_SIZE))
 {
 	mGridRectangle.scale(20.f, 20.f);
 	mGridRectangle.setFillColor(sf::Color(128, 212, 255, 100));
 	sf::FloatRect bounds = mGridRectangle.getLocalBounds();
 	mGridRectangle.setOrigin(std::floor(bounds.left + bounds.width / 2.f), 0.f);
-}
-
-Grid::~Grid()
-{
 }
 
 bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)

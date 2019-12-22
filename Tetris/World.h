@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Defs.h"
+#include "GameLib.h"
 #include "ResourceHolder.h"
 #include "ResourceIdentifiers.h"
 #include "SceneNode.h"
@@ -13,34 +13,34 @@
 
 class World : private sf::NonCopyable
 {
-	public:
-		explicit World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts);
-		void update(sf::Time dt);
-		void draw();
+public:
+	explicit World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts);
+	void update(sf::Time dt);
+	void draw();
 
-		std::queue<Command>& getCommandQueue();
+	std::queue<Command>& getCommandQueue();
 
-	private:
-		void loadTextures();
-		void buildScene();
-		void createTetromino();
+private:
+	void loadTextures();
+	void buildScene();
+	void createTetromino();
 
-		sf::RenderWindow& mWindow;
-		TextureHolder& mTextures;
-		FontHolder& mFonts;
+	sf::RenderWindow& mWindow;
+	TextureHolder& mTextures;
+	FontHolder& mFonts;
 
-		SceneNode mSceneGraph;
-		std::queue<Command> mCommandQueue;
+	SceneNode mSceneGraph;
+	std::queue<Command> mCommandQueue;
 
-		int mScore;
-		int mLevel;
-		int mLinesNumber;
-		bool mIsGameFinished;
+	int mScore{ 0 };
+	int mLevel{ 1 };
+	int mLinesNumber{ 0 };
+	bool mIsGameFinished{ false };
 
-		TextNode* mScoreDisplay;
-		TextNode* mLevelDisplay;
-		TextNode* mLinesNumberDisplay;
-		Grid* mTetrisGrid;
+	TextNode* mScoreDisplay;
+	TextNode* mLevelDisplay;
+	TextNode* mLinesNumberDisplay;
+	Grid* mTetrisGrid;
 
-		TetrominoFactory mTetrominoFactory;
+	TetrominoFactory mTetrominoFactory;
 };

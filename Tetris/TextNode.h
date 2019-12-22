@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Defs.h"
+#include "GameLib.h"
 #include "ResourceHolder.h"
 #include "ResourceIdentifiers.h"
 #include "SceneNode.h"

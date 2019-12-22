@@ -21,46 +21,45 @@ namespace std
 
 class Grid : public SceneNode
 {
-	public :
-		struct Tile
-		{
-			sf::Color color = sf::Color::Transparent;
-			unsigned int value = 0;
-		};
+public :
+	struct Tile
+	{
+		sf::Color color{ sf::Color::Transparent };
+		unsigned int value{ 0 };
+	};
 
-		Grid();
-		virtual ~Grid();
+	Grid();
 
-		bool addTetromino(std::unique_ptr<Tetromino> tetromino);
-		bool moveCurrentTetromino(const sf::Vector2i& deltaPosition);
-		bool hardDropCurrentTetromino();
-		bool rotateCurrentTetromino(bool clockWise = true);
+	bool addTetromino(std::unique_ptr<Tetromino> tetromino);
+	bool moveCurrentTetromino(const sf::Vector2i& deltaPosition);
+	bool hardDropCurrentTetromino();
+	bool rotateCurrentTetromino(bool clockWise = true);
 
-		bool needNewTetromino() const;
+	bool needNewTetromino() const;
 
-		virtual Category getCategory() const;
+	virtual Category getCategory() const;
 
-	private :
-		virtual void updateCurrent(sf::Time dt);
-		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
-		bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
-		void removeCompletedLines();
-		std::size_t positionToIndex(const sf::Vector2u& position) const;
+private :
+	virtual void updateCurrent(sf::Time dt);
+	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
+	bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
+	void removeCompletedLines();
+	std::size_t positionToIndex(const sf::Vector2u& position) const;
 
-		static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicks();
-		static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicksI();
+	static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicks();
+	static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicksI();
 
-		int mTimeSinceLastTetrominoMovement = 0;
-		bool mNeedNewTetromino = false;
+	int mTimeSinceLastTetrominoMovement{ 0 };
+	bool mNeedNewTetromino{ false };
 
-		const sf::Vector2u GRID_SIZE = sf::Vector2u(10, 22);
+	const sf::Vector2u GRID_SIZE{ 10, 22 };
 
-		std::array<Tile, 220> mTiles;
-		std::unique_ptr<Tetromino> mCurrentTetromino = nullptr;
-		sf::Vector2u mCurrentTetrominoPosition;
-		sf::RectangleShape mGridRectangle;
+	std::array<Tile, 220> mTiles;
+	std::unique_ptr<Tetromino> mCurrentTetromino{ nullptr };
+	sf::Vector2u mCurrentTetrominoPosition;
+	sf::RectangleShape mGridRectangle{ sf::Vector2f(GRID_SIZE) };
 
-		const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS = initializeRotationWallKicks();
-		const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS_I = initializeRotationWallKicksI();
+	const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS{ initializeRotationWallKicks() };
+	const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS_I{ initializeRotationWallKicksI() };
 };
 

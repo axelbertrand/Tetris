@@ -1,7 +1,7 @@
 #include "MenuState.h"
 
-MenuState::MenuState(StateStack& stack, Context context) :
-	State(stack, context)
+MenuState::MenuState(StateStack& stack, Context context)
+	: State(stack, context)
 {
 }
 

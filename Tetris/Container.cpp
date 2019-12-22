@@ -2,19 +2,14 @@
 
 namespace gui
 {
-
-	Container::Container() :
-	mChildren(),
-	mSelectedChild(-1)
-	{
-	}
-
-	void Container::pack(Component::Ptr component)
+	void Container::pack(std::shared_ptr<Component> component)
 	{
 		mChildren.push_back(component);
 
 		if (!hasSelection() && component->isSelectable())
+		{
 			select(mChildren.size() - 1);
+		}
 	}
 
 	bool Container::isSelectable() const
@@ -41,7 +36,9 @@ namespace gui
 			else if (event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
 			{
 				if (hasSelection())
+				{
 					mChildren[mSelectedChild]->activate();
+				}
 			}
 		}
 	}
@@ -50,8 +47,10 @@ namespace gui
 	{
 		states.transform *= getTransform();
 
-		for(const Component::Ptr& child : mChildren)
+		for (const std::shared_ptr<Component>& child : mChildren)
+		{
 			target.draw(*child, states);
+		}
 	}
 
 	bool Container::hasSelection() const
@@ -64,7 +63,9 @@ namespace gui
 		if (mChildren[index]->isSelectable())
 		{
 			if (hasSelection())
+			{
 				mChildren[mSelectedChild]->deselect();
+			}
 
 			mChildren[index]->select();
 			mSelectedChild = index;
@@ -74,11 +75,15 @@ namespace gui
 	void Container::selectNext()
 	{
 		if (!hasSelection())
+		{
 			return;
+		}
 
 		int next = mSelectedChild;
 		do
+		{
 			next = (next + 1) % mChildren.size();
+		}
 		while (!mChildren[next]->isSelectable());
 
 		select(next);
@@ -87,14 +92,17 @@ namespace gui
 	void Container::selectPrevious()
 	{
 		if (!hasSelection())
+		{
 			return;
+		}
 
 		int prev = mSelectedChild;
 		do
+		{
 			prev = (prev + mChildren.size() - 1) % mChildren.size();
+		}
 		while (!mChildren[prev]->isSelectable());
 
 		select(prev);
 	}
-
 }

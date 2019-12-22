@@ -1,7 +1,7 @@
 #include "LoadingGameState.h"
 
-LoadingGameState::LoadingGameState(StateStack& stack, Context context) :
-	State(stack, context)
+LoadingGameState::LoadingGameState(StateStack& stack, Context context)
+	: State(stack, context)
 {
 }
 

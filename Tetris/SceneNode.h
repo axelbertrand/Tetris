@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Defs.h"
+#include "GameLib.h"
 
 #include "Command.h"
 #include <vector>
@@ -9,12 +9,8 @@
 class SceneNode : public sf::Transformable, public sf::Drawable, private sf::NonCopyable
 {
 	public:
-		typedef std::unique_ptr<SceneNode> Ptr;
-
-		SceneNode();
-
-		void attachChild(Ptr child);
-		Ptr detachChild(const SceneNode& node);
+		void attachChild(std::unique_ptr<SceneNode> child);
+		std::unique_ptr<SceneNode> detachChild(const SceneNode& node);
 
 		void update(sf::Time dt);
 
@@ -34,6 +30,6 @@ class SceneNode : public sf::Transformable, public sf::Drawable, private sf::Non
 
 
 	private:
-		std::vector<Ptr> mChildren;
-		SceneNode* mParent;
+		std::vector<std::unique_ptr<SceneNode>> mChildren;
+		SceneNode* mParent{ nullptr };
 };

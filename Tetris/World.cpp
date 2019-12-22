@@ -11,11 +11,6 @@ World::World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& font
 	: mWindow(window)
 	, mTextures(textures)
 	, mFonts(fonts)
-	, mSceneGraph()
-	, mScore(0)
-	, mLevel(1)
-	, mLinesNumber(0)
-	, mIsGameFinished(false)
 {
 	loadTextures();
 	buildScene();
@@ -31,7 +26,9 @@ void World::update(sf::Time dt)
 	{
 		std::unique_ptr<Tetromino> nextTetromino = mTetrominoFactory.createRandomTetromino();
 		if (!mTetrisGrid->addTetromino(std::move(nextTetromino)))
+		{
 			mIsGameFinished = true;
+		}
 	}
 
 	while (!mCommandQueue.empty())

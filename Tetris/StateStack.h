@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Defs.h"
+#include "GameLib.h"
 #include "State.h"
 #include "StateIdentifiers.h"
 #include <vector>
@@ -10,59 +10,55 @@
 
 class StateStack : private sf::NonCopyable
 {
-	public :
-		enum Action
-		{
-			Push,
-			Pop,
-			Clear,
-		};
+public :
+	enum class Action
+	{
+		Push,
+		Pop,
+		Clear,
+	};
 
+	explicit StateStack(State::Context context);
 
-		explicit StateStack(State::Context context);
+	template <typename T>
+	void registerState(StatesID stateID);
 
-		template <typename T>
-		void registerState(States::ID stateID);
+	void update(sf::Time dt);
+	void draw();
+	void handleEvent(const sf::Event& event);
 
-		void update(sf::Time dt);
-		void draw();
-		void handleEvent(const sf::Event& event);
+	void pushState(StatesID stateID);
+	void popState();
+	void clearStates();
 
-		void pushState(States::ID stateID);
-		void popState();
-		void clearStates();
+	bool isEmpty() const;
 
-		bool isEmpty() const;
+private :
+	std::unique_ptr<State> createState(StatesID stateID);
+	void applyPendingChanges();
 
+	struct PendingChange
+	{
+		explicit PendingChange(Action action, StatesID stateID = StatesID::None);
 
-	private :
-		State::Ptr createState(States::ID stateID);
-		void applyPendingChanges();
+		Action action;
+		StatesID stateID;
+	};
 
+	std::vector<std::unique_ptr<State>> mStack;
+	std::vector<PendingChange> mPendingList;
 
-		struct PendingChange
-		{
-			explicit PendingChange(Action action, States::ID stateID = States::None);
-
-			Action action;
-			States::ID stateID;
-		};
-
-
-		std::vector<State::Ptr> mStack;
-		std::vector<PendingChange> mPendingList;
-
-		State::Context mContext;
-		std::map<States::ID, std::function<State::Ptr()>> mFactories;
+	State::Context mContext;
+	std::map<StatesID, std::function<std::unique_ptr<State>()>> mFactories;
 };
 
 
 template <typename T>
-void StateStack::registerState(States::ID stateID)
+void StateStack::registerState(StatesID stateID)
 {
 	mFactories[stateID] = [this]()
 	{
-		return State::Ptr(new T(*this, mContext));
+		return std::unique_ptr<State>(new T(*this, mContext));
 	};
 }
 
