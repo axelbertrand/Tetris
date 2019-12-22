@@ -25,6 +25,14 @@ struct TetrominoRotator
 	}
 };
 
+struct TetrominoHardDropper
+{
+	void operator() (Grid& grid, sf::Time dt) const
+	{
+		grid.hardDropCurrentTetromino();
+	}
+};
+
 Player::Player()
 {
 	mKeyBinding[sf::Keyboard::Left] = Action::MoveLeft;
@@ -91,7 +99,7 @@ void Player::initializeActions()
 	mActionBinding[Action::MoveLeft].action = derivedAction<Grid>(TetrominoMover(-1, 0));
 	mActionBinding[Action::MoveRight].action = derivedAction<Grid>(TetrominoMover(1, 0));
 	mActionBinding[Action::SoftDrop].action = derivedAction<Grid>(TetrominoMover(0, 1));
-	mActionBinding[Action::HardDrop].action = derivedAction<Grid>(TetrominoMover(0, -1));
+	mActionBinding[Action::HardDrop].action = derivedAction<Grid>(TetrominoHardDropper());
 	mActionBinding[Action::Rotate].action = derivedAction<Grid>(TetrominoRotator());
 }
 

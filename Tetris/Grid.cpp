@@ -69,6 +69,17 @@ bool Grid::moveCurrentTetromino(const sf::Vector2i& deltaPosition)
 	return true;
 }
 
+bool Grid::hardDropCurrentTetromino()
+{
+	bool canMove = false;
+	while (moveCurrentTetromino({ 0, 1 }))
+	{
+		canMove = true;
+	}
+
+	return canMove;
+}
+
 bool Grid::rotateCurrentTetromino(bool clockWise)
 {
 	mCurrentTetromino->forEachTile([this](const unsigned int i, const unsigned int j) {

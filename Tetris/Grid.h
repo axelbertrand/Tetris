@@ -33,6 +33,7 @@ class Grid : public SceneNode
 
 		bool addTetromino(std::unique_ptr<Tetromino> tetromino);
 		bool moveCurrentTetromino(const sf::Vector2i& deltaPosition);
+		bool hardDropCurrentTetromino();
 		bool rotateCurrentTetromino(bool clockWise = true);
 
 		bool needNewTetromino() const;
