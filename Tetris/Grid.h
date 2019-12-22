@@ -33,6 +33,7 @@ class Grid : public SceneNode
 
 		bool addTetromino(std::unique_ptr<Tetromino> tetromino);
 		bool moveCurrentTetromino(const sf::Vector2i& deltaPosition);
+		bool hardDropCurrentTetromino();
 		bool rotateCurrentTetromino(bool clockWise = true);
 
 		bool needNewTetromino() const;
@@ -43,9 +44,8 @@ class Grid : public SceneNode
 		virtual void updateCurrent(sf::Time dt);
 		virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 		bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
-
-		void updateTetrominoPositionMapping(const sf::Vector2u& oldPosition, const sf::Vector2u& newPosition);
-		sf::Vector2u getCurrentTetrominoPosition() const;
+		void removeCompletedLines();
+		std::size_t positionToIndex(const sf::Vector2u& position) const;
 
 		static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicks();
 		static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicksI();
@@ -56,8 +56,8 @@ class Grid : public SceneNode
 		const sf::Vector2u GRID_SIZE = sf::Vector2u(10, 22);
 
 		std::array<Tile, 220> mTiles;
-		std::unordered_map<sf::Vector2u, std::unique_ptr<Tetromino>> mTetrominos;
-		Tetromino* mCurrentTetromino = nullptr;
+		std::unique_ptr<Tetromino> mCurrentTetromino = nullptr;
+		sf::Vector2u mCurrentTetrominoPosition;
 		sf::RectangleShape mGridRectangle;
 
 		const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS = initializeRotationWallKicks();
