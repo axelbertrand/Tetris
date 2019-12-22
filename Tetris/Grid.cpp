@@ -202,53 +202,19 @@ void Grid::removeCompletedLines()
 
 		if (isLineCompleted)
 		{
-			// Remove the line at i
-			for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
-			{
-				mTiles.at(positionToIndex({ j, i })).value = 0;
-				mTiles.at(positionToIndex({ j, i })).color = sf::Color::Transparent;
-			}
-
-			lastCompletedLine = i;
-
-			++totalLineCount;
-		}
-	}
-
-	// Move down tetrominos
-	if (totalLineCount > 0)
-	{
-		for (unsigned int i = lastCompletedLine + totalLineCount - 1; i != static_cast<unsigned int>(-1 + totalLineCount); --i)
-		{
-			bool lineEmpty = true;
-			for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
-			{
-				if (mTiles.at(positionToIndex({ j, i - totalLineCount })).value != 0)
-				{
-					lineEmpty = false;
-					break;
-				}
-			}
-
-			if (lineEmpty)
+			for (unsigned int k = i; k != 0; --k)
 			{
 				for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
 				{
-					mTiles.at(positionToIndex({ j, i })).value = 0;
-					mTiles.at(positionToIndex({ j, i })).color = sf::Color::Transparent;
+					mTiles.at(positionToIndex({ j, k })).value = mTiles.at(positionToIndex({ j, k - 1 })).value;
+					mTiles.at(positionToIndex({ j, k })).color = mTiles.at(positionToIndex({ j, k - 1 })).color;
 				}
-
-				break;
 			}
 
-			for (unsigned int j = 0; j < GRID_SIZE.x; ++j)
-			{
-				mTiles.at(positionToIndex({ j, i })).value = mTiles.at(positionToIndex({ j, i - totalLineCount })).value;
-				mTiles.at(positionToIndex({ j, i })).color = mTiles.at(positionToIndex({ j, i - totalLineCount })).color;
-			}
+			++totalLineCount;
+			++i;
 		}
 	}
-	
 }
 
 std::size_t Grid::positionToIndex(const sf::Vector2u& position) const
