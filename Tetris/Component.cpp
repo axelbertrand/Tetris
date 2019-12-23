@@ -2,17 +2,6 @@
 
 namespace gui
 {
-
-	Component::Component() :
-		mIsSelected(false),
-		mIsActive(false)
-	{
-	}
-
-	Component::~Component()
-	{
-	}
-
 	bool Component::isSelected() const
 	{
 		return mIsSelected;
@@ -42,5 +31,4 @@ namespace gui
 	{
 		mIsActive = false;
 	}
-
 }

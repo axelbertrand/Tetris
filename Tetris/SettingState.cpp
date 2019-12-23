@@ -1,7 +1,7 @@
 #include "SettingState.h"
 
-SettingState::SettingState(StateStack& stack, Context context) :
-	State(stack, context)
+SettingState::SettingState(StateStack& stack, Context context)
+	: State(stack, context)
 {
 }
 

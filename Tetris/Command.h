@@ -9,11 +9,10 @@ class SceneNode;
 
 struct Command
 {
-	typedef std::function<void(SceneNode&, sf::Time)> Action;
-	Command();
+	using Action = std::function<void(SceneNode&, sf::Time)>;
 
 	Action action;
-	Category category;
+	Category category{ Category::None };
 };
 
 template <typename GameObject, typename Function>

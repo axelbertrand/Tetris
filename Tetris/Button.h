@@ -7,12 +7,10 @@
 
 namespace gui
 {
-
 	class Button : public Component
 	{
 	public:
-		typedef std::shared_ptr<Button>		Ptr;
-		typedef std::function<void()>		Callback;
+		using Callback = std::function<void()>;
 
 		Button(const FontHolder& fonts, const TextureHolder& textures);
 
@@ -38,7 +36,6 @@ namespace gui
 		const sf::Texture& mPressedTexture;
 		sf::Sprite mSprite;
 		sf::Text mText;
-		bool mIsToggle;
+		bool mIsToggle{ false };
 	};
-
 }

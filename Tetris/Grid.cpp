@@ -4,16 +4,11 @@
 #include "TetrominoFactory.h"
 
 Grid::Grid()
-	: mGridRectangle(sf::Vector2f(GRID_SIZE))
 {
 	mGridRectangle.scale(20.f, 20.f);
 	mGridRectangle.setFillColor(sf::Color(128, 212, 255, 100));
 	sf::FloatRect bounds = mGridRectangle.getLocalBounds();
 	mGridRectangle.setOrigin(std::floor(bounds.left + bounds.width / 2.f), 0.f);
-}
-
-Grid::~Grid()
-{
 }
 
 bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
@@ -155,9 +150,9 @@ void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(mGridRectangle, states);
 
-	for (int x = 0; x < GRID_SIZE.x; ++x)
+	for (int x = 0; x < static_cast<int>(GRID_SIZE.x); ++x)
 	{
-		for (int y = 0; y < GRID_SIZE.y; ++y)
+		for (int y = 0; y < static_cast<int>(GRID_SIZE.y); ++y)
 		{
 			sf::RectangleShape tileRectangle({ 20.f, 20.f });
 			tileRectangle.setPosition({ (x - static_cast<int>(GRID_SIZE.x / 2)) * 20.f, y * 20.f });

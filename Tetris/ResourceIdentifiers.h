@@ -1,34 +1,15 @@
 #pragma once
 
-namespace sf
+enum class TexturesID
 {
-	class Texture;
-	class Font;
-}
+	BackGround,
+	ButtonNormal,
+	ButtonSelected,
+	ButtonPressed,
+};
 
-namespace Textures
+enum class FontsID
 {
-	enum ID
-	{
-		BackGround,
-		ButtonNormal,
-		ButtonSelected,
-		ButtonPressed,
-	};
-}
-
-namespace Fonts
-{
-	enum ID
-	{
-		Main,
-		Title,
-	};
-}
-
-
-template <typename Resource, typename Identifier>
-class ResourceHolder;
-
-typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
-typedef ResourceHolder<sf::Font, Fonts::ID> FontHolder;
+	Main,
+	Title,
+};

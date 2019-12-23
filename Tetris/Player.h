@@ -7,32 +7,31 @@
 
 class Player
 {
-	public :
-		enum class Action
-		{
-			MoveLeft,
-			MoveRight,
-			SoftDrop,
-			HardDrop,
-			Rotate,
-			Hold,
-			ActionCount
-		};
+public :
+	enum class Action
+	{
+		MoveLeft,
+		MoveRight,
+		SoftDrop,
+		HardDrop,
+		Rotate,
+		Hold,
+		ActionCount
+	};
 
-		Player();
-		~Player();
+	Player();
 
-		void handleEvent(const sf::Event& event, std::queue<Command>& commands);
-		void handleRealtimeInput(std::queue<Command>& commands);
+	void handleEvent(const sf::Event& event, std::queue<Command>& commands);
+	void handleRealtimeInput(std::queue<Command>& commands);
 
-		void assignKey(Action action, sf::Keyboard::Key key);
-		sf::Keyboard::Key getAssignedKey(Action action) const;
+	void assignKey(Action action, sf::Keyboard::Key key);
+	sf::Keyboard::Key getAssignedKey(Action action) const;
 
-	private :
-		void initializeActions();
-		static bool isRealtimeAction(Action action);
+private :
+	void initializeActions();
+	static bool isRealtimeAction(Action action);
 
-		std::map<sf::Keyboard::Key, Action> mKeyBinding;
-		std::map<Action, Command> mActionBinding;
+	std::map<sf::Keyboard::Key, Action> mKeyBinding;
+	std::map<Action, Command> mActionBinding;
 };
 

@@ -3,14 +3,12 @@
 #include "ResourceHolder.h"
 #include "Button.h"
 
-TitleState::TitleState(StateStack& stack, Context context) :
-State(stack, context),
-mTetrisTitle(),
-mContainer()
+TitleState::TitleState(StateStack& stack, Context context)
+	: State(stack, context)
 {
 	sf::Vector2u windowSize = context.window->getSize();
 
-	mTetrisTitle.setFont(context.fonts->get(Fonts::Title));
+	mTetrisTitle.setFont(context.fonts->get(FontsID::Title));
 	mTetrisTitle.setString("TETRIS");
 	mTetrisTitle.setCharacterSize(120u);
 	mTetrisTitle.setPosition((windowSize.x - mTetrisTitle.getLocalBounds().width) / 2, 10);
@@ -22,7 +20,7 @@ mContainer()
 	newGameButton->setCallback([this]()
 	{
 		requestStackPop();
-		requestStackPush(States::Game);
+		requestStackPush(StatesID::Game);
 	});
 
 	auto loadGameButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
@@ -30,7 +28,7 @@ mContainer()
 	loadGameButton->setText("Charger partie");
 	loadGameButton->setCallback([this]()
 	{
-		requestStackPush(States::LoadingGame);
+		requestStackPush(StatesID::LoadingGame);
 	});
 
 	auto settingsButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
@@ -38,7 +36,7 @@ mContainer()
 	settingsButton->setText("Options");
 	settingsButton->setCallback([this]()
 	{
-		requestStackPush(States::Settings);
+		requestStackPush(StatesID::Settings);
 	});
 
 	auto quitButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);

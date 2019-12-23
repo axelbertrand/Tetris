@@ -1,4 +1,6 @@
 #include "Application.h"
+
+#include "ResourceIdentifiers.h"
 #include "State.h"
 #include "TitleState.h"
 #include "GameState.h"
@@ -8,36 +10,24 @@
 
 const sf::Time Application::TIME_PER_FRAME = sf::seconds(1.f / 60.f);
 
-Application::Application() :
-mWindow(sf::VideoMode(800u, 600u), "Tetris"),
-mTextures(),
-mFonts(),
-mStateStack(State::Context(mWindow, mTextures, mFonts)),
-mBackground(),
-mFpsText(),
-mFpsUpdateTime(),
-mFpsNumFrames(0)
+Application::Application()
 {
-	mFonts.load(Fonts::Main, "PressStart2P.ttf");
-	mFonts.load(Fonts::Title, "Games.ttf");
+	mFonts.load(FontsID::Main, "PressStart2P.ttf");
+	mFonts.load(FontsID::Title, "Games.ttf");
 
-	mTextures.load(Textures::BackGround, "background.png");
-	mTextures.load(Textures::ButtonNormal, "ButtonNormal.png");
-	mTextures.load(Textures::ButtonSelected, "ButtonSelected.png");
-	mTextures.load(Textures::ButtonPressed, "ButtonPressed.png");
+	mTextures.load(TexturesID::BackGround, "background.png");
+	mTextures.load(TexturesID::ButtonNormal, "ButtonNormal.png");
+	mTextures.load(TexturesID::ButtonSelected, "ButtonSelected.png");
+	mTextures.load(TexturesID::ButtonPressed, "ButtonPressed.png");
 
-	mBackground.setTexture(mTextures.get(Textures::BackGround));
+	mBackground.setTexture(mTextures.get(TexturesID::BackGround));
 
-	mFpsText.setFont(mFonts.get(Fonts::Main));
+	mFpsText.setFont(mFonts.get(FontsID::Main));
 	mFpsText.setCharacterSize(10u);
 	mFpsText.setPosition(5.f, 5.f);
 
 	registerStates();
-	mStateStack.pushState(States::Title);
-}
-
-Application::~Application()
-{
+	mStateStack.pushState(StatesID::Title);
 }
 
 void Application::run()
@@ -75,7 +65,9 @@ void Application::processInput()
 		mStateStack.handleEvent(event);
 
 		if (event.type == sf::Event::Closed)
+		{
 			mWindow.close();
+		}
 	}
 }
 
@@ -99,11 +91,11 @@ void Application::render()
 
 void Application::registerStates()
 {
-	mStateStack.registerState<TitleState>(States::Title);
-	mStateStack.registerState<GameState>(States::Game);
-	mStateStack.registerState<MenuState>(States::Menu);
-	mStateStack.registerState<SettingState>(States::Settings);
-	mStateStack.registerState<LoadingGameState>(States::LoadingGame);
+	mStateStack.registerState<TitleState>(StatesID::Title);
+	mStateStack.registerState<GameState>(StatesID::Game);
+	mStateStack.registerState<MenuState>(StatesID::Menu);
+	mStateStack.registerState<SettingState>(StatesID::Settings);
+	mStateStack.registerState<LoadingGameState>(StatesID::LoadingGame);
 }
 
 void Application::updateFps(sf::Time dt)

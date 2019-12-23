@@ -7,12 +7,7 @@ Tetromino::Tetromino(uint16_t shape, std::size_t maxSize, sf::Color color, Type 
 	, mMaxSize(maxSize)
 	, mColor(color)
 	, mType(type)
-	, mRotationState(0)
 	, mValue(++sMaxValue)
-{
-}
-
-Tetromino::~Tetromino()
 {
 }
 

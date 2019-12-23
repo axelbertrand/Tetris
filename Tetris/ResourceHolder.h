@@ -6,6 +6,13 @@
 #include <stdexcept>
 #include <cassert>
 
+#include "ResourceIdentifiers.h"
+
+namespace sf
+{
+	class Texture;
+	class Font;
+}
 
 template <typename Resource, typename Identifier>
 class ResourceHolder
@@ -25,5 +32,8 @@ class ResourceHolder
 
 		std::map<Identifier, std::unique_ptr<Resource>>	mResourceMap;
 };
+
+using TextureHolder = ResourceHolder<sf::Texture, TexturesID>;
+using FontHolder = ResourceHolder<sf::Font, FontsID>;
 
 #include "ResourceHolder.inl"

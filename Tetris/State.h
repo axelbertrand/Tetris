@@ -1,45 +1,40 @@
 #pragma once
 
-#include "Defs.h"
+#include "GameLib.h"
 #include "StateIdentifiers.h"
-#include "ResourceIdentifiers.h"
+#include "ResourceHolder.h"
 #include <memory>
 
 class StateStack;
 
 class State
 {
-	public :
-		typedef std::unique_ptr<State> Ptr;
+public:
+	struct Context
+	{
+		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts);
 
-		struct Context
-		{
-			Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts);
+		sf::RenderWindow* window;
+		TextureHolder* textures;
+		FontHolder* fonts;
+	};
 
-			sf::RenderWindow* window;
-			TextureHolder* textures;
-			FontHolder* fonts;
-		};
+	State(StateStack& stack, Context context);
+	virtual ~State() = default;
 
+	virtual void draw() = 0;
+	virtual bool update(sf::Time dt) = 0;
+	virtual bool handleEvent(const sf::Event& event) = 0;
 
-		State(StateStack& stack, Context context);
-		virtual ~State();
+protected:
+	void requestStackPush(StatesID stateID);
+	void requestStackPop();
+	void requestStateClear();
 
-		virtual void draw() = 0;
-		virtual bool update(sf::Time dt) = 0;
-		virtual bool handleEvent(const sf::Event& event) = 0;
+	Context getContext() const;
 
-
-	protected :
-		void requestStackPush(States::ID stateID);
-		void requestStackPop();
-		void requestStateClear();
-
-		Context getContext() const;
-
-
-	private :
-		StateStack* mStack;
-		Context mContext;
+private:
+	StateStack* mStack;
+	Context mContext;
 };
 

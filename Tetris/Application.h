@@ -1,19 +1,17 @@
 #pragma once
 
-#include "Defs.h"
+#include "GameLib.h"
 #include "ResourceHolder.h"
-#include "ResourceIdentifiers.h"
 #include "StateStack.h"
 
 class Application
 {
-	public :
+	public:
 		Application();
-		~Application();
 
 		void run();
 
-	private :
+	private:
 		void processInput();
 		void update(sf::Time dt);
 		void render();
@@ -22,14 +20,14 @@ class Application
 
 		static const sf::Time TIME_PER_FRAME;
 
-		sf::RenderWindow mWindow;
+		sf::RenderWindow mWindow{ sf::VideoMode(800u, 600u), "Tetris" };
 		TextureHolder mTextures;
 		FontHolder mFonts;
-		StateStack mStateStack;
+		StateStack mStateStack{ State::Context(mWindow, mTextures, mFonts) };
 
 		sf::Sprite mBackground;
 
 		sf::Text mFpsText;
 		sf::Time mFpsUpdateTime;
-		int mFpsNumFrames;
+		int mFpsNumFrames{ 0 };
 };

@@ -1,5 +1,4 @@
-#include "Defs.h"
-
+#include <iostream>
 #include "Application.h"
 
 int main()
@@ -13,7 +12,7 @@ int main()
 	{
 		std::cout << "\nEXCEPTION : " << e.what() << std::endl;
 		std::cin.get();
-	}
 
-	return 0;
+		return EXIT_FAILURE;
+	}
 }
