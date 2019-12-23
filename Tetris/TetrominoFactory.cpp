@@ -41,6 +41,8 @@ std::unique_ptr<Tetromino> TetrominoFactory::createRandomTetromino()
 		//  XX
 		return std::make_unique<Tetromino>(0b0000000000110011, 3, sf::Color::Red, Tetromino::Type::Z);
 	}
+
+	return nullptr;
 }
 
 Tetromino::Type TetrominoFactory::getRandomTetrominoType()

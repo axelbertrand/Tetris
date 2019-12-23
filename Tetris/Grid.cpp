@@ -150,9 +150,9 @@ void Grid::drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(mGridRectangle, states);
 
-	for (int x = 0; x < GRID_SIZE.x; ++x)
+	for (int x = 0; x < static_cast<int>(GRID_SIZE.x); ++x)
 	{
-		for (int y = 0; y < GRID_SIZE.y; ++y)
+		for (int y = 0; y < static_cast<int>(GRID_SIZE.y); ++y)
 		{
 			sf::RectangleShape tileRectangle({ 20.f, 20.f });
 			tileRectangle.setPosition({ (x - static_cast<int>(GRID_SIZE.x / 2)) * 20.f, y * 20.f });
