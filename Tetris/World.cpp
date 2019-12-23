@@ -24,6 +24,9 @@ void World::update(sf::Time dt)
 
 	if (mTetrisGrid->needNewTetromino())
 	{
+		unsigned int completedLinesCount = mTetrisGrid->getCompletedLinesCount();
+		mScore += completedLinesCount * SCORE_MULTIPLIER;
+
 		std::unique_ptr<Tetromino> nextTetromino = mTetrominoFactory.createRandomTetromino();
 		if (!mTetrisGrid->addTetromino(std::move(nextTetromino)))
 		{

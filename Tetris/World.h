@@ -25,6 +25,8 @@ private:
 	void buildScene();
 	void createTetromino();
 
+	const unsigned int SCORE_MULTIPLIER{ 100 };
+
 	sf::RenderWindow& mWindow;
 	TextureHolder& mTextures;
 	FontHolder& mFonts;

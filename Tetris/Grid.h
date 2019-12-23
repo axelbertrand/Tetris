@@ -36,6 +36,7 @@ public :
 	bool rotateCurrentTetromino(bool clockWise = true);
 
 	bool needNewTetromino() const;
+	unsigned int getCompletedLinesCount() const;
 
 	virtual Category getCategory() const;
 
@@ -43,7 +44,7 @@ private :
 	virtual void updateCurrent(sf::Time dt);
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 	bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
-	void removeCompletedLines();
+	unsigned int removeCompletedLines();
 	std::size_t positionToIndex(const sf::Vector2u& position) const;
 
 	static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicks();
@@ -51,6 +52,7 @@ private :
 
 	int mTimeSinceLastTetrominoMovement{ 0 };
 	bool mNeedNewTetromino{ false };
+	unsigned int mCompletedLinesCount{ 0 };
 
 	const sf::Vector2u GRID_SIZE{ 10, 22 };
 
