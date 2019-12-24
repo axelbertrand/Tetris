@@ -26,7 +26,7 @@ private:
 	void createTetromino();
 
 	const unsigned int SCORE_MULTIPLIER{ 100 };
-	const unsigned int LEVEL_UP_SCORE{ 400 };
+	const unsigned int STARTING_LEVEL_UP_SCORE{ 400 };
 
 	sf::RenderWindow& mWindow;
 	TextureHolder& mTextures;

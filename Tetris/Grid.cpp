@@ -127,6 +127,11 @@ unsigned int Grid::getCompletedLinesCount() const
 	return mCompletedLinesCount;
 }
 
+void Grid::increaseSpeed()
+{
+	mUpdateTime *= SPEED_MULTIPLIER;
+}
+
 Category Grid::getCategory() const
 {
 	return Category::Grid;
@@ -136,7 +141,7 @@ void Grid::updateCurrent(sf::Time dt)
 {
 	mTimeSinceLastTetrominoMovement += dt.asMilliseconds();
 
-	if (mTimeSinceLastTetrominoMovement >= 1000)
+	if (mTimeSinceLastTetrominoMovement >= mUpdateTime)
 	{
 		if (!moveCurrentTetromino(sf::Vector2i(0, 1)))
 		{
@@ -148,7 +153,7 @@ void Grid::updateCurrent(sf::Time dt)
 			mCompletedLinesCount = removeCompletedLines();
 		}
 
-		mTimeSinceLastTetrominoMovement -= 1000;
+		mTimeSinceLastTetrominoMovement -= mUpdateTime;
 	}
 }
 

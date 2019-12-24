@@ -28,11 +28,12 @@ void World::update(sf::Time dt)
 		{
 			mScoreSinceLastLevel += completedLinesCount * SCORE_MULTIPLIER;
 			mTotalScore += completedLinesCount * SCORE_MULTIPLIER;
-			double levelUpCeil = LEVEL_UP_SCORE * (1 + (mLevel - 1) / 10.);
+			double levelUpCeil = STARTING_LEVEL_UP_SCORE * (1 + (mLevel - 1) / 10.);
 			if (mScoreSinceLastLevel >= levelUpCeil)
 			{
 				++mLevel;
 				mScoreSinceLastLevel -= static_cast<unsigned int>(levelUpCeil);
+				mTetrisGrid->increaseSpeed();
 			}
 		}
 

@@ -37,6 +37,7 @@ public :
 
 	bool needNewTetromino() const;
 	unsigned int getCompletedLinesCount() const;
+	void increaseSpeed();
 
 	virtual Category getCategory() const;
 
@@ -50,18 +51,19 @@ private :
 	static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicks();
 	static std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> initializeRotationWallKicksI();
 
+	const sf::Vector2u GRID_SIZE{ 10, 22 };
+	const double SPEED_MULTIPLIER{ 0.925874 };
+	const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS{ initializeRotationWallKicks() };
+	const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS_I{ initializeRotationWallKicksI() };
+
 	int mTimeSinceLastTetrominoMovement{ 0 };
 	bool mNeedNewTetromino{ false };
 	unsigned int mCompletedLinesCount{ 0 };
-
-	const sf::Vector2u GRID_SIZE{ 10, 22 };
+	unsigned int mUpdateTime{ 1000 };
 
 	std::array<Tile, 220> mTiles;
 	std::unique_ptr<Tetromino> mCurrentTetromino{ nullptr };
 	sf::Vector2u mCurrentTetrominoPosition;
 	sf::RectangleShape mGridRectangle{ sf::Vector2f(GRID_SIZE) };
-
-	const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS{ initializeRotationWallKicks() };
-	const std::unordered_map<sf::Vector2u, std::array<sf::Vector2i, 5>> ROTATION_WALL_KICKS_I{ initializeRotationWallKicksI() };
 };
 
