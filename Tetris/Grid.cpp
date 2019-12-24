@@ -28,6 +28,7 @@ bool Grid::addTetromino(std::unique_ptr<Tetromino> tetromino)
 	});
 
 	mNeedNewTetromino = false;
+	mCompletedLinesCount = 0;
 
 	return true;
 }
@@ -121,6 +122,16 @@ bool Grid::needNewTetromino() const
 	return mNeedNewTetromino;
 }
 
+unsigned int Grid::getCompletedLinesCount() const
+{
+	return mCompletedLinesCount;
+}
+
+void Grid::increaseSpeed()
+{
+	mUpdateTime *= SPEED_MULTIPLIER;
+}
+
 Category Grid::getCategory() const
 {
 	return Category::Grid;
@@ -130,7 +141,7 @@ void Grid::updateCurrent(sf::Time dt)
 {
 	mTimeSinceLastTetrominoMovement += dt.asMilliseconds();
 
-	if (mTimeSinceLastTetrominoMovement >= 1000)
+	if (mTimeSinceLastTetrominoMovement >= mUpdateTime)
 	{
 		if (!moveCurrentTetromino(sf::Vector2i(0, 1)))
 		{
@@ -139,10 +150,10 @@ void Grid::updateCurrent(sf::Time dt)
 
 		if (mNeedNewTetromino)
 		{
-			removeCompletedLines();
+			mCompletedLinesCount = removeCompletedLines();
 		}
 
-		mTimeSinceLastTetrominoMovement -= 1000;
+		mTimeSinceLastTetrominoMovement -= mUpdateTime;
 	}
 }
 
@@ -185,7 +196,7 @@ bool Grid::checkCollision(Tetromino* tetromino, const sf::Vector2u& position) co
 	return hasCollision;
 }
 
-void Grid::removeCompletedLines()
+unsigned int Grid::removeCompletedLines()
 {
 	unsigned int totalLineCount = 0;
 	unsigned int lastCompletedLine = GRID_SIZE.y - 1;
@@ -221,6 +232,8 @@ void Grid::removeCompletedLines()
 			++i;
 		}
 	}
+
+	return totalLineCount;
 }
 
 std::size_t Grid::positionToIndex(const sf::Vector2u& position) const

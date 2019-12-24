@@ -18,12 +18,25 @@ World::World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& font
 
 void World::update(sf::Time dt)
 {
-	mScoreDisplay->setString(std::to_string(mScore));
+	mScoreDisplay->setString(std::to_string(mTotalScore));
 	mLevelDisplay->setString(std::to_string(mLevel));
 	mLinesNumberDisplay->setString(std::to_string(mLinesNumber));
 
 	if (mTetrisGrid->needNewTetromino())
 	{
+		if (unsigned int completedLinesCount = mTetrisGrid->getCompletedLinesCount(); completedLinesCount > 0)
+		{
+			mScoreSinceLastLevel += completedLinesCount * SCORE_MULTIPLIER;
+			mTotalScore += completedLinesCount * SCORE_MULTIPLIER;
+			double levelUpCeil = STARTING_LEVEL_UP_SCORE * (1 + (mLevel - 1) / 10.);
+			if (mScoreSinceLastLevel >= levelUpCeil)
+			{
+				++mLevel;
+				mScoreSinceLastLevel -= static_cast<unsigned int>(levelUpCeil);
+				mTetrisGrid->increaseSpeed();
+			}
+		}
+
 		std::unique_ptr<Tetromino> nextTetromino = mTetrominoFactory.createRandomTetromino();
 		if (!mTetrisGrid->addTetromino(std::move(nextTetromino)))
 		{
@@ -48,6 +61,11 @@ void World::draw()
 std::queue<Command>& World::getCommandQueue()
 {
 	return mCommandQueue;
+}
+
+bool World::isGameFinished() const
+{
+	return mIsGameFinished;
 }
 
 void World::loadTextures()
@@ -79,7 +97,7 @@ void World::buildScene()
 	std::unique_ptr<TextNode> scoreTitleText = std::make_unique<TextNode>("Score", mFonts);
 	scoreTitleText->setPosition(100, 300);
 
-	std::unique_ptr<TextNode> scoreText = std::make_unique<TextNode>(std::to_string(mScore), mFonts);
+	std::unique_ptr<TextNode> scoreText = std::make_unique<TextNode>(std::to_string(mTotalScore), mFonts);
 	scoreText->setPosition(0, 50);
 	mScoreDisplay = scoreText.get();
 

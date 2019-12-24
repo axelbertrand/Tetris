@@ -20,10 +20,15 @@ public:
 
 	std::queue<Command>& getCommandQueue();
 
+	bool isGameFinished() const;
+
 private:
 	void loadTextures();
 	void buildScene();
 	void createTetromino();
+
+	const unsigned int SCORE_MULTIPLIER{ 100 };
+	const unsigned int STARTING_LEVEL_UP_SCORE{ 400 };
 
 	sf::RenderWindow& mWindow;
 	TextureHolder& mTextures;
@@ -32,9 +37,10 @@ private:
 	SceneNode mSceneGraph;
 	std::queue<Command> mCommandQueue;
 
-	int mScore{ 0 };
-	int mLevel{ 1 };
-	int mLinesNumber{ 0 };
+	unsigned int mTotalScore{ 0 };
+	unsigned int mScoreSinceLastLevel{ 0 };
+	unsigned int mLevel{ 1 };
+	unsigned int mLinesNumber{ 0 };
 	bool mIsGameFinished{ false };
 
 	TextNode* mScoreDisplay;
