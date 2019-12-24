@@ -20,6 +20,8 @@ public:
 
 	std::queue<Command>& getCommandQueue();
 
+	bool isGameFinished() const;
+
 private:
 	void loadTextures();
 	void buildScene();

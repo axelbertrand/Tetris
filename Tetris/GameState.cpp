@@ -15,6 +15,12 @@ bool GameState::update(sf::Time dt)
 {
 	mWorld.update(dt);
 
+	if (mWorld.isGameFinished())
+	{
+		requestStateClear();
+		requestStackPush(StatesID::Title);
+	}
+
 	std::queue<Command>& commands = mWorld.getCommandQueue();
 	mPlayer.handleRealtimeInput(commands);
 

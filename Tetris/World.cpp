@@ -63,6 +63,11 @@ std::queue<Command>& World::getCommandQueue()
 	return mCommandQueue;
 }
 
+bool World::isGameFinished() const
+{
+	return mIsGameFinished;
+}
+
 void World::loadTextures()
 {
 
