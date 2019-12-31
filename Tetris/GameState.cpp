@@ -32,5 +32,11 @@ bool GameState::handleEvent(const sf::Event & event)
 	std::queue<Command>& commands = mWorld.getCommandQueue();
 	mPlayer.handleEvent(event, commands);
 
+	// Press Escape key to pause the game
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+	{
+		requestStackPush(StatesID::Pause);
+	}
+
 	return true;
 }
