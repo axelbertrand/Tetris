@@ -4,6 +4,7 @@
 #include "State.h"
 #include "TitleState.h"
 #include "GameState.h"
+#include "PauseState.h"
 #include "MenuState.h"
 #include "SettingState.h"
 #include "LoadingGameState.h"
@@ -93,6 +94,7 @@ void Application::registerStates()
 {
 	mStateStack.registerState<TitleState>(StatesID::Title);
 	mStateStack.registerState<GameState>(StatesID::Game);
+	mStateStack.registerState<PauseState>(StatesID::Pause);
 	mStateStack.registerState<MenuState>(StatesID::Menu);
 	mStateStack.registerState<SettingState>(StatesID::Settings);
 	mStateStack.registerState<LoadingGameState>(StatesID::LoadingGame);
