@@ -11,7 +11,7 @@ PauseState::PauseState(StateStack& stack, Context context, bool letUpdateThrough
 
 	mPauseText.setFont(font);
 	mPauseText.setString("Game Paused");
-	mPauseText.setCharacterSize(70);
+	mPauseText.setCharacterSize(50);
 
 	sf::FloatRect bounds = mPauseText.getLocalBounds();
 	mPauseText.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
@@ -31,7 +31,7 @@ PauseState::PauseState(StateStack& stack, Context context, bool letUpdateThrough
 	backToMenuButton->setCallback([this]()
 	{
 		requestStateClear();
-		requestStackPush(StatesID::Menu);
+		requestStackPush(StatesID::Title);
 	});
 
 	mContainer.pack(resumeGameButton);
@@ -48,6 +48,7 @@ void PauseState::draw()
 	backgroundShape.setFillColor(sf::Color(0, 0, 0, 150));
 	backgroundShape.setSize(window.getView().getSize());
 
+	window.draw(backgroundShape);
 	window.draw(mPauseText);
 	window.draw(mContainer);
 }
@@ -60,5 +61,12 @@ bool PauseState::update(sf::Time dt)
 bool PauseState::handleEvent(const sf::Event& event)
 {
 	mContainer.handleEvent(event);
+
+	// Press Escape key to resume the game
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+	{
+		requestStackPop();
+	}
+
 	return false;
 }
