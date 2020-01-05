@@ -1,8 +1,5 @@
 #include "TetrominoFactory.h"
 
-#include <random>
-#include <chrono>
-
 std::unique_ptr<Tetromino> TetrominoFactory::createRandomTetromino()
 {
 	switch (getRandomTetrominoType())
@@ -47,10 +44,9 @@ std::unique_ptr<Tetromino> TetrominoFactory::createRandomTetromino()
 
 Tetromino::Type TetrominoFactory::getRandomTetrominoType()
 {
-	std::default_random_engine randomEngine(std::chrono::system_clock::now().time_since_epoch().count());
 	std::uniform_int_distribution<int> distribution(0, 6);
 
-	switch (distribution(randomEngine))
+	switch (distribution(mRandomGenerator))
 	{
 	case 0:
 		return Tetromino::Type::I;

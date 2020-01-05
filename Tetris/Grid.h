@@ -59,7 +59,7 @@ private :
 	int mTimeSinceLastTetrominoMovement{ 0 };
 	bool mNeedNewTetromino{ false };
 	unsigned int mCompletedLinesCount{ 0 };
-	unsigned int mUpdateTime{ 1000 };
+	int mUpdateTime{ 1000 };
 
 	std::array<Tile, 220> mTiles;
 	std::unique_ptr<Tetromino> mCurrentTetromino{ nullptr };
