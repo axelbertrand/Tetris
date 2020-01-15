@@ -20,8 +20,8 @@ public :
 
 	explicit StateStack(State::Context context);
 
-	template <typename T>
-	void registerState(StatesID stateID);
+	template <typename T, typename... Args>
+	void registerState(StatesID stateID, Args... args);
 
 	void update(sf::Time dt);
 	void draw();
@@ -53,12 +53,12 @@ private :
 };
 
 
-template <typename T>
-void StateStack::registerState(StatesID stateID)
+template <typename T, typename... Args>
+void StateStack::registerState(StatesID stateID, Args... args)
 {
 	mFactories[stateID] = [this]()
 	{
-		return std::unique_ptr<State>(new T(*this, mContext));
+		return std::make_unique<T>(*this, mContext, args...);
 	};
 }
 

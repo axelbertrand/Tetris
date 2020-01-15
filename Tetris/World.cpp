@@ -5,6 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 
 
 World::World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
@@ -66,6 +67,22 @@ std::queue<Command>& World::getCommandQueue()
 bool World::isGameFinished() const
 {
 	return mIsGameFinished;
+}
+
+bool World::saveWorld(std::string_view filename)
+{
+	std::ofstream outputSaveFile(filename.data());
+	if (!outputSaveFile)
+	{
+		return false;
+	}
+
+	outputSaveFile << mTotalScore;
+	outputSaveFile << mScoreSinceLastLevel;
+	outputSaveFile << mLevel;
+	outputSaveFile << mLinesNumber;
+
+	return true;
 }
 
 void World::loadTextures()

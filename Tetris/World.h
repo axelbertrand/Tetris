@@ -8,6 +8,7 @@
 #include "Grid.h"
 #include "Command.h"
 #include <queue>
+#include <string_view>
 
 #include "TetrominoFactory.h"
 
@@ -21,6 +22,7 @@ public:
 	std::queue<Command>& getCommandQueue();
 
 	bool isGameFinished() const;
+	bool saveWorld(std::string_view filename);
 
 private:
 	void loadTextures();
