@@ -22,7 +22,8 @@ public:
 	std::queue<Command>& getCommandQueue();
 
 	bool isGameFinished() const;
-	bool saveWorld(std::string_view filename);
+	bool save(std::string_view filename);
+	bool load(std::string_view filename);
 
 private:
 	void loadTextures();

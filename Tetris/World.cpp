@@ -69,9 +69,9 @@ bool World::isGameFinished() const
 	return mIsGameFinished;
 }
 
-bool World::saveWorld(std::string_view filename)
+bool World::save(std::string_view filename)
 {
-	std::ofstream outputSaveFile(filename.data());
+	std::ofstream outputSaveFile(filename.data(), std::ios::binary | std::ios::trunc);
 	if (!outputSaveFile)
 	{
 		return false;
@@ -81,6 +81,22 @@ bool World::saveWorld(std::string_view filename)
 	outputSaveFile << mScoreSinceLastLevel;
 	outputSaveFile << mLevel;
 	outputSaveFile << mLinesNumber;
+
+	return true;
+}
+
+bool World::load(std::string_view filename)
+{
+	std::ifstream inputLoadFile(filename.data(), std::ios::binary);
+	if (!inputLoadFile)
+	{
+		return false;
+	}
+
+	inputLoadFile >> mTotalScore;
+	inputLoadFile >> mScoreSinceLastLevel;
+	inputLoadFile >> mLevel;
+	inputLoadFile >> mLinesNumber;
 
 	return true;
 }

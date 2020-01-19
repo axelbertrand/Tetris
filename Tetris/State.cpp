@@ -29,6 +29,10 @@ void State::requestStateClear()
 	mStack->clearStates();
 }
 
+void State::save()
+{
+}
+
 State::Context State::getContext() const
 {
 	return mContext;

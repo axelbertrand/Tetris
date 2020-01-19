@@ -1,6 +1,7 @@
 #include "PauseState.h"
 
 #include "Button.h"
+#include "StateStack.h"
 
 PauseState::PauseState(StateStack& stack, Context context, bool letUpdateThrough)
 	: State(stack, context)
@@ -30,6 +31,7 @@ PauseState::PauseState(StateStack& stack, Context context, bool letUpdateThrough
 	backToMenuButton->setText("Back to menu");
 	backToMenuButton->setCallback([this]()
 	{
+		mStack->save();
 		requestStateClear();
 		requestStackPush(StatesID::Title);
 	});

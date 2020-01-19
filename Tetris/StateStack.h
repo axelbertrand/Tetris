@@ -27,6 +27,8 @@ public :
 	void draw();
 	void handleEvent(const sf::Event& event);
 
+	void save();
+
 	void pushState(StatesID stateID);
 	void popState();
 	void clearStates();

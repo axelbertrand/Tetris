@@ -26,6 +26,8 @@ public:
 	virtual bool update(sf::Time dt) = 0;
 	virtual bool handleEvent(const sf::Event& event) = 0;
 
+	virtual void save();
+
 protected:
 	void requestStackPush(StatesID stateID);
 	void requestStackPop();
@@ -33,8 +35,8 @@ protected:
 
 	Context getContext() const;
 
-private:
 	StateStack* mStack;
+private:
 	Context mContext;
 };
 

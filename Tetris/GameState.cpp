@@ -40,3 +40,8 @@ bool GameState::handleEvent(const sf::Event & event)
 
 	return true;
 }
+
+void GameState::save()
+{
+	mWorld.save(SAVE_FILE_PATH);
+}
