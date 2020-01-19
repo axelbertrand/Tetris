@@ -39,11 +39,11 @@ public :
 	unsigned int getCompletedLinesCount() const;
 	void increaseSpeed();
 
-	virtual Category getCategory() const;
+	Category getCategory() const override;
 
 private :
-	virtual void updateCurrent(sf::Time dt);
-	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
+	void updateCurrent(sf::Time dt) override;
+	void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
 	bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
 	unsigned int removeCompletedLines();
 	std::size_t positionToIndex(const sf::Vector2u& position) const;

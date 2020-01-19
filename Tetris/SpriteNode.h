@@ -9,7 +9,7 @@ public:
 	SpriteNode(const sf::Texture& texture, const sf::IntRect& textureRect);
 
 private:
-	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
+	void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	sf::Sprite mSprite;
 };

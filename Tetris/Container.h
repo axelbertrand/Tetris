@@ -9,11 +9,11 @@ namespace gui
 	public:
 		void pack(std::shared_ptr<Component> component);
 
-		virtual bool isSelectable() const;
-		virtual void handleEvent(const sf::Event& event);
+		bool isSelectable() const override;
+		void handleEvent(const sf::Event& event) override;
 
 	private:
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 		bool hasSelection() const;
 		void select(std::size_t index);

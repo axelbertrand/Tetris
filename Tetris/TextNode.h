@@ -13,7 +13,7 @@ public:
 	void setString(const std::string& text);
 
 private:
-	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
+	void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	sf::Text mText;
 };
