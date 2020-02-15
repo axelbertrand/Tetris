@@ -28,6 +28,7 @@ TitleState::TitleState(StateStack& stack, Context context)
 	loadGameButton->setText("Charger partie");
 	loadGameButton->setCallback([this]()
 	{
+		requestStackPop();
 		requestStackPush(StatesID::LoadingGame);
 	});
 

@@ -1,9 +1,13 @@
 #include "GameState.h"
 
-GameState::GameState(StateStack& stack, Context context)
+GameState::GameState(StateStack& stack, Context context, bool loadWorld)
 	: State(stack, context)
 	, mWorld(*context.window, *context.textures, *context.fonts)
 { 
+	if (loadWorld)
+	{
+		mWorld.load(SAVE_FILE_PATH);
+	}
 }
 
 void GameState::draw()

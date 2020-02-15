@@ -97,7 +97,7 @@ void Application::registerStates()
 	mStateStack.registerState<PauseState>(StatesID::Pause);
 	mStateStack.registerState<MenuState>(StatesID::Menu);
 	mStateStack.registerState<SettingState>(StatesID::Settings);
-	mStateStack.registerState<LoadingGameState>(StatesID::LoadingGame);
+	mStateStack.registerState<GameState>(StatesID::LoadingGame, true);
 }
 
 void Application::updateFps(sf::Time dt)

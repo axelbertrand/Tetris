@@ -58,7 +58,7 @@ private :
 template <typename T, typename... Args>
 void StateStack::registerState(StatesID stateID, Args... args)
 {
-	mFactories[stateID] = [this]()
+	mFactories[stateID] = [this, args...]()
 	{
 		return std::make_unique<T>(*this, mContext, args...);
 	};
