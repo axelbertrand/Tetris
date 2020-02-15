@@ -5,8 +5,6 @@
 #include <memory>
 #include <algorithm>
 #include <cmath>
-#include <fstream>
-
 
 World::World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
 	: mWindow(window)
@@ -38,7 +36,7 @@ void World::update(sf::Time dt)
 			}
 		}
 
-		std::unique_ptr<Tetromino> nextTetromino = mTetrominoFactory.createRandomTetromino();
+		std::unique_ptr<Tetromino> nextTetromino = TetrominoFactory::getInstance().createRandomTetromino();
 		if (!mTetrisGrid->addTetromino(std::move(nextTetromino)))
 		{
 			mIsGameFinished = true;
@@ -69,34 +67,36 @@ bool World::isGameFinished() const
 	return mIsGameFinished;
 }
 
-bool World::save(std::string_view filename)
+bool World::save(std::ofstream outputFileStream)
 {
-	std::ofstream outputSaveFile(filename.data(), std::ios::binary | std::ios::trunc);
-	if (!outputSaveFile)
+	if (!outputFileStream)
 	{
 		return false;
 	}
 
-	outputSaveFile << mTotalScore;
-	outputSaveFile << mScoreSinceLastLevel;
-	outputSaveFile << mLevel;
-	outputSaveFile << mLinesNumber;
+	outputFileStream << mTotalScore;
+	outputFileStream << mScoreSinceLastLevel;
+	outputFileStream << mLevel;
+	outputFileStream << mLinesNumber;
+
+	mTetrisGrid->save(std::move(outputFileStream));
 
 	return true;
 }
 
-bool World::load(std::string_view filename)
+bool World::load(std::ifstream inputFileStream)
 {
-	std::ifstream inputLoadFile(filename.data(), std::ios::binary);
-	if (!inputLoadFile)
+	if (!inputFileStream)
 	{
 		return false;
 	}
 
-	inputLoadFile >> mTotalScore;
-	inputLoadFile >> mScoreSinceLastLevel;
-	inputLoadFile >> mLevel;
-	inputLoadFile >> mLinesNumber;
+	inputFileStream >> mTotalScore;
+	inputFileStream >> mScoreSinceLastLevel;
+	inputFileStream >> mLevel;
+	inputFileStream >> mLinesNumber;
+
+	mTetrisGrid->load(std::move(inputFileStream));
 
 	return true;
 }
@@ -165,5 +165,5 @@ void World::buildScene()
 
 void World::createTetromino()
 {
-	mTetrisGrid->addTetromino(mTetrominoFactory.createRandomTetromino());
+	mTetrisGrid->addTetromino(TetrominoFactory::getInstance().createRandomTetromino());
 }

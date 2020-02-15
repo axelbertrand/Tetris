@@ -1,12 +1,15 @@
 #include "GameState.h"
 
+#include <fstream>
+
 GameState::GameState(StateStack& stack, Context context, bool loadWorld)
 	: State(stack, context)
 	, mWorld(*context.window, *context.textures, *context.fonts)
 { 
 	if (loadWorld)
 	{
-		mWorld.load(SAVE_FILE_PATH);
+		std::ifstream inputFileStream(SAVE_FILE_PATH, std::ios::binary);
+		mWorld.load(std::move(inputFileStream));
 	}
 }
 
@@ -47,5 +50,6 @@ bool GameState::handleEvent(const sf::Event & event)
 
 void GameState::save()
 {
-	mWorld.save(SAVE_FILE_PATH);
+	std::ofstream outputFileStream(SAVE_FILE_PATH, std::ios::binary | std::ios::trunc);
+	mWorld.save(std::move(outputFileStream));
 }

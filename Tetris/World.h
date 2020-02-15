@@ -8,7 +8,7 @@
 #include "Grid.h"
 #include "Command.h"
 #include <queue>
-#include <string_view>
+#include <fstream>
 
 #include "TetrominoFactory.h"
 
@@ -22,8 +22,8 @@ public:
 	std::queue<Command>& getCommandQueue();
 
 	bool isGameFinished() const;
-	bool save(std::string_view filename);
-	bool load(std::string_view filename);
+	bool save(std::ofstream outputFileStream);
+	bool load(std::ifstream inputFileStream);
 
 private:
 	void loadTextures();
@@ -50,6 +50,4 @@ private:
 	TextNode* mLevelDisplay;
 	TextNode* mLinesNumberDisplay;
 	Grid* mTetrisGrid;
-
-	TetrominoFactory mTetrominoFactory;
 };

@@ -2,22 +2,11 @@
 
 #include <array>
 #include <unordered_map>
+#include <fstream>
+
 #include "SceneNode.h"
 #include "Tetromino.h"
-
-namespace std
-{
-	template <>
-	struct hash<sf::Vector2u>
-	{
-		std::size_t operator()(const sf::Vector2u& vector) const
-		{
-			// Compute individual hash values for x and y
-			// and combine them using XOR and bit shifting
-			return (std::hash<unsigned int>()(vector.x) ^ (hash<unsigned int>()(vector.y) << 1));
-		}
-	};
-}
+#include "Utils.h"
 
 class Grid : public SceneNode
 {
@@ -40,6 +29,9 @@ public :
 	void increaseSpeed();
 
 	Category getCategory() const override;
+
+	bool save(std::ofstream outputFileStream);
+	bool load(std::ifstream inputFileStream);
 
 private :
 	void updateCurrent(sf::Time dt) override;

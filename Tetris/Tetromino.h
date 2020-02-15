@@ -7,7 +7,7 @@
 class Tetromino
 {
 public:
-	enum class Type
+	enum class Type : uint8_t
 	{
 		I, J, L, O, S, T, Z
 	};
