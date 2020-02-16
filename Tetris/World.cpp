@@ -74,10 +74,10 @@ bool World::save(std::ofstream outputFileStream)
 		return false;
 	}
 
-	outputFileStream << mTotalScore;
-	outputFileStream << mScoreSinceLastLevel;
-	outputFileStream << mLevel;
-	outputFileStream << mLinesNumber;
+	outputFileStream << mTotalScore << '\n';
+	outputFileStream << mScoreSinceLastLevel << '\n';
+	outputFileStream << mLevel << '\n';
+	outputFileStream << mLinesNumber << '\n';
 
 	mTetrisGrid->save(std::move(outputFileStream));
 

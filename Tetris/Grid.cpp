@@ -139,22 +139,22 @@ Category Grid::getCategory() const
 
 bool Grid::save(std::ofstream outputFileStream)
 {
-	for (Tile tile : mTiles)
+	for (const Tile& tile : mTiles)
 	{
-		outputFileStream << tile.color.toInteger();
-		outputFileStream << tile.value;
+		outputFileStream << tile.color.toInteger() << '\n';
+		outputFileStream << tile.value << '\n';
 	}
 
-	outputFileStream << toUnderlyingType(mCurrentTetromino->getType());
-	outputFileStream << mCurrentTetrominoPosition.x;
-	outputFileStream << mCurrentTetrominoPosition.y;
+	outputFileStream << toUnderlyingType(mCurrentTetromino->getType()) << '\n';
+	outputFileStream << mCurrentTetrominoPosition.x << '\n';
+	outputFileStream << mCurrentTetrominoPosition.y << '\n';
 
 	return true;
 }
 
 bool Grid::load(std::ifstream inputFileStream)
 {
-	for (Tile tile : mTiles)
+	for (Tile& tile : mTiles)
 	{
 		uint32_t colorInt;
 		inputFileStream >> colorInt;
