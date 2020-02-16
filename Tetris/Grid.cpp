@@ -137,6 +137,41 @@ Category Grid::getCategory() const
 	return Category::Grid;
 }
 
+bool Grid::save(std::ofstream outputFileStream)
+{
+	for (const Tile& tile : mTiles)
+	{
+		outputFileStream << tile.color.toInteger() << '\n';
+		outputFileStream << tile.value << '\n';
+	}
+
+	outputFileStream << toUnderlyingType(mCurrentTetromino->getType()) << '\n';
+	outputFileStream << mCurrentTetrominoPosition.x << '\n';
+	outputFileStream << mCurrentTetrominoPosition.y << '\n';
+
+	return true;
+}
+
+bool Grid::load(std::ifstream inputFileStream)
+{
+	for (Tile& tile : mTiles)
+	{
+		uint32_t colorInt;
+		inputFileStream >> colorInt;
+		tile.color = sf::Color(colorInt);
+		inputFileStream >> tile.value;
+	}
+
+	std::underlying_type_t<Tetromino::Type> tetrominoType;
+	inputFileStream >> tetrominoType;
+	mCurrentTetromino = TetrominoFactory::getInstance().createTetromino(static_cast<Tetromino::Type>(tetrominoType));
+
+	inputFileStream >> mCurrentTetrominoPosition.x;
+	inputFileStream >> mCurrentTetrominoPosition.y;
+
+	return true;
+}
+
 void Grid::updateCurrent(sf::Time dt)
 {
 	mTimeSinceLastTetrominoMovement += dt.asMilliseconds();

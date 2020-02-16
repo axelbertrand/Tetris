@@ -39,6 +39,14 @@ void StateStack::handleEvent(const sf::Event& event)
 	applyPendingChanges();
 }
 
+void StateStack::save()
+{
+	for (std::unique_ptr<State>& state : mStack)
+	{
+		state->save();
+	}
+}
+
 void StateStack::pushState(StatesID stateID)
 {
 	mPendingList.push_back(PendingChange(Action::Push, stateID));

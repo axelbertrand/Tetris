@@ -181,6 +181,7 @@
     <ClInclude Include="TetrominoFactory.h" />
     <ClInclude Include="TextNode.h" />
     <ClInclude Include="TitleState.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

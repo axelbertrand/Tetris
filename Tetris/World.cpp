@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <cmath>
 
-
 World::World(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
 	: mWindow(window)
 	, mTextures(textures)
@@ -37,7 +36,7 @@ void World::update(sf::Time dt)
 			}
 		}
 
-		std::unique_ptr<Tetromino> nextTetromino = mTetrominoFactory.createRandomTetromino();
+		std::unique_ptr<Tetromino> nextTetromino = TetrominoFactory::getInstance().createRandomTetromino();
 		if (!mTetrisGrid->addTetromino(std::move(nextTetromino)))
 		{
 			mIsGameFinished = true;
@@ -66,6 +65,40 @@ std::queue<Command>& World::getCommandQueue()
 bool World::isGameFinished() const
 {
 	return mIsGameFinished;
+}
+
+bool World::save(std::ofstream outputFileStream)
+{
+	if (!outputFileStream)
+	{
+		return false;
+	}
+
+	outputFileStream << mTotalScore << '\n';
+	outputFileStream << mScoreSinceLastLevel << '\n';
+	outputFileStream << mLevel << '\n';
+	outputFileStream << mLinesNumber << '\n';
+
+	mTetrisGrid->save(std::move(outputFileStream));
+
+	return true;
+}
+
+bool World::load(std::ifstream inputFileStream)
+{
+	if (!inputFileStream)
+	{
+		return false;
+	}
+
+	inputFileStream >> mTotalScore;
+	inputFileStream >> mScoreSinceLastLevel;
+	inputFileStream >> mLevel;
+	inputFileStream >> mLinesNumber;
+
+	mTetrisGrid->load(std::move(inputFileStream));
+
+	return true;
 }
 
 void World::loadTextures()
@@ -132,5 +165,5 @@ void World::buildScene()
 
 void World::createTetromino()
 {
-	mTetrisGrid->addTetromino(mTetrominoFactory.createRandomTetromino());
+	mTetrisGrid->addTetromino(TetrominoFactory::getInstance().createRandomTetromino());
 }

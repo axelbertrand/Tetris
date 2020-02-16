@@ -2,9 +2,9 @@
 #include "StateStack.h"
 
 State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
-	: window(&window),
-	textures(&textures),
-	fonts(&fonts)
+	: window(&window)
+	, textures(&textures)
+	, fonts(&fonts)
 {
 }
 
@@ -27,6 +27,10 @@ void State::requestStackPop()
 void State::requestStateClear()
 {
 	mStack->clearStates();
+}
+
+void State::save()
+{
 }
 
 State::Context State::getContext() const

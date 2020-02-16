@@ -7,7 +7,7 @@
 class Tetromino
 {
 public:
-	enum class Type
+	enum class Type : unsigned int
 	{
 		I, J, L, O, S, T, Z
 	};

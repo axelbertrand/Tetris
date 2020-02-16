@@ -2,22 +2,11 @@
 
 #include <array>
 #include <unordered_map>
+#include <fstream>
+
 #include "SceneNode.h"
 #include "Tetromino.h"
-
-namespace std
-{
-	template <>
-	struct hash<sf::Vector2u>
-	{
-		std::size_t operator()(const sf::Vector2u& vector) const
-		{
-			// Compute individual hash values for x and y
-			// and combine them using XOR and bit shifting
-			return (std::hash<unsigned int>()(vector.x) ^ (hash<unsigned int>()(vector.y) << 1));
-		}
-	};
-}
+#include "Utils.h"
 
 class Grid : public SceneNode
 {
@@ -39,11 +28,14 @@ public :
 	unsigned int getCompletedLinesCount() const;
 	void increaseSpeed();
 
-	virtual Category getCategory() const;
+	Category getCategory() const override;
+
+	bool save(std::ofstream outputFileStream);
+	bool load(std::ifstream inputFileStream);
 
 private :
-	virtual void updateCurrent(sf::Time dt);
-	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
+	void updateCurrent(sf::Time dt) override;
+	void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
 	bool checkCollision(Tetromino* tetromino, const sf::Vector2u& position) const;
 	unsigned int removeCompletedLines();
 	std::size_t positionToIndex(const sf::Vector2u& position) const;
