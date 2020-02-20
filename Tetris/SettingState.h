@@ -1,6 +1,7 @@
 #pragma once
 
 #include "State.h"
+#include "Container.h"
 
 class SettingState : public State
 {
@@ -10,5 +11,8 @@ public:
 	void draw() override;
 	bool update(sf::Time dt) override;
 	bool handleEvent(const sf::Event& event) override;
+
+private:
+	gui::Container mContainer;
 };
 

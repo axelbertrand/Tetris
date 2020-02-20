@@ -23,7 +23,9 @@ class Application
 		sf::RenderWindow mWindow{ sf::VideoMode(800u, 600u), "Tetris" };
 		TextureHolder mTextures;
 		FontHolder mFonts;
-		StateStack mStateStack{ State::Context(mWindow, mTextures, mFonts) };
+
+		KeyBinding mKeyBinding;
+		StateStack mStateStack{ State::Context(mWindow, mTextures, mFonts, mKeyBinding) };
 
 		sf::Sprite mBackground;
 

@@ -5,6 +5,7 @@
 GameState::GameState(StateStack& stack, Context context, bool loadWorld)
 	: State(stack, context)
 	, mWorld(*context.window, *context.textures, *context.fonts)
+	, mPlayer(*context.keyBinding)
 { 
 	if (loadWorld)
 	{
