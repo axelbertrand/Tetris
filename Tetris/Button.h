@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "ResourceHolder.h"
 #include "ResourceIdentifiers.h"
+#include "State.h"
 #include <functional>
 
 namespace gui
@@ -12,7 +13,7 @@ namespace gui
 	public:
 		using Callback = std::function<void()>;
 
-		Button(const FontHolder& fonts, const TextureHolder& textures);
+		Button(const State::Context& context);
 
 		void setCallback(Callback callback);
 		void setText(const std::string& text);

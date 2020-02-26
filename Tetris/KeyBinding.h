@@ -8,7 +8,7 @@
 
 namespace PlayerAction
 {
-	enum class Type
+	enum class Type : std::size_t
 	{
 		MoveLeft,
 		MoveRight,

@@ -1,7 +1,13 @@
 #pragma once
 
+#include <memory>
+#include <array>
 #include "State.h"
+#include "KeyBinding.h"
 #include "Container.h"
+#include "Button.h"
+#include "Label.h"
+#include "Utils.h"
 
 class SettingState : public State
 {
@@ -13,6 +19,11 @@ public:
 	bool handleEvent(const sf::Event& event) override;
 
 private:
+	void updateLabels();
+	void addButtonLabel(std::size_t index, std::size_t x, std::size_t y, const std::string& text, Context context);
+
 	gui::Container mContainer;
+	std::array<std::shared_ptr<gui::Button>, toUnderlyingType(PlayerAction::Type::Count)> mBindingButtons;
+	std::array<std::shared_ptr<gui::Label>, toUnderlyingType(PlayerAction::Type::Count)> mBindingLabels;
 };
 
