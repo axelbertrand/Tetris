@@ -1,6 +1,10 @@
 #pragma once
 
 #include <type_traits>
+#include <sstream>
+
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace std
 {
@@ -21,3 +25,13 @@ constexpr auto toUnderlyingType(E e) noexcept
 {
     return static_cast<std::underlying_type_t<E>>(e);
 }
+
+template <typename T>
+std::string toString(const T& value)
+{
+	std::stringstream stream;
+	stream << value;
+	return stream.str();
+}
+
+std::string toString(const sf::Keyboard::Key& key);

@@ -3,6 +3,7 @@
 #include "GameLib.h"
 #include "StateIdentifiers.h"
 #include "ResourceHolder.h"
+#include "KeyBinding.h"
 #include <memory>
 
 class StateStack;
@@ -12,11 +13,12 @@ class State
 public:
 	struct Context
 	{
-		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts);
+		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, KeyBinding& keyBinding);
 
 		sf::RenderWindow* window;
 		TextureHolder* textures;
 		FontHolder* fonts;
+		KeyBinding* keyBinding;
 	};
 
 	State(StateStack& stack, Context context);

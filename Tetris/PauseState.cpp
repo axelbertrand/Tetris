@@ -18,7 +18,7 @@ PauseState::PauseState(StateStack& stack, Context context, bool letUpdateThrough
 	mPauseText.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 	mPauseText.setPosition(0.5f * windowSize.x, 0.4f * windowSize.y);
 
-	auto resumeGameButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	auto resumeGameButton = std::make_shared<gui::Button>(context);
 	resumeGameButton->setPosition(0.5f * windowSize.x - 100, 0.4f * windowSize.y + 75);
 	resumeGameButton->setText("Resume game");
 	resumeGameButton->setCallback([this]()
@@ -26,7 +26,7 @@ PauseState::PauseState(StateStack& stack, Context context, bool letUpdateThrough
 		requestStackPop();
 	});
 
-	auto backToMenuButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	auto backToMenuButton = std::make_shared<gui::Button>(context);
 	backToMenuButton->setPosition(0.5f * windowSize.x - 100, 0.4f * windowSize.y + 125);
 	backToMenuButton->setText("Back to menu");
 	backToMenuButton->setCallback([this]()

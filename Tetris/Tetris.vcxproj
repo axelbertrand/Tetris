@@ -139,6 +139,8 @@
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="KeyBinding.cpp" />
+    <ClCompile Include="Label.cpp" />
     <ClCompile Include="LoadingGameState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />
@@ -153,6 +155,7 @@
     <ClCompile Include="TetrominoFactory.cpp" />
     <ClCompile Include="TextNode.cpp" />
     <ClCompile Include="TitleState.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +168,8 @@
     <ClInclude Include="GameLib.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="KeyBinding.h" />
+    <ClInclude Include="Label.h" />
     <ClInclude Include="LoadingGameState.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="PauseState.h" />

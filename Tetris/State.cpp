@@ -1,10 +1,11 @@
 #include "State.h"
 #include "StateStack.h"
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts)
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, KeyBinding& keyBinding)
 	: window(&window)
 	, textures(&textures)
 	, fonts(&fonts)
+	, keyBinding(&keyBinding)
 {
 }
 

@@ -14,7 +14,7 @@ TitleState::TitleState(StateStack& stack, Context context)
 	mTetrisTitle.setPosition((windowSize.x - mTetrisTitle.getLocalBounds().width) / 2, 10);
 	mTetrisTitle.setFillColor(sf::Color::Black);
 
-	auto newGameButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	auto newGameButton = std::make_shared<gui::Button>(context);
 	newGameButton->setPosition(300, 200);
 	newGameButton->setText("Nouvelle partie");
 	newGameButton->setCallback([this]()
@@ -23,7 +23,7 @@ TitleState::TitleState(StateStack& stack, Context context)
 		requestStackPush(StatesID::Game);
 	});
 
-	auto loadGameButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	auto loadGameButton = std::make_shared<gui::Button>(context);
 	loadGameButton->setPosition(300, 300);
 	loadGameButton->setText("Charger partie");
 	loadGameButton->setCallback([this]()
@@ -32,7 +32,7 @@ TitleState::TitleState(StateStack& stack, Context context)
 		requestStackPush(StatesID::LoadingGame);
 	});
 
-	auto settingsButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	auto settingsButton = std::make_shared<gui::Button>(context);
 	settingsButton->setPosition(300, 400);
 	settingsButton->setText("Options");
 	settingsButton->setCallback([this]()
@@ -40,7 +40,7 @@ TitleState::TitleState(StateStack& stack, Context context)
 		requestStackPush(StatesID::Settings);
 	});
 
-	auto quitButton = std::make_shared<gui::Button>(*context.fonts, *context.textures);
+	auto quitButton = std::make_shared<gui::Button>(context);
 	quitButton->setPosition(300, 500);
 	quitButton->setText("Quitter");
 	quitButton->setCallback([this]()
